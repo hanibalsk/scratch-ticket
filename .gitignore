@@ -21,6 +21,7 @@ venv/
 *~
 .vscode/
 .idea/
+.kotlin/
 
 # Gradle
 .gradle/

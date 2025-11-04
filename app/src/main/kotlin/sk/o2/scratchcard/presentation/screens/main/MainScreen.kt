@@ -119,7 +119,7 @@ private fun MainScreenContent(
 
 @Preview(name = "Main Screen - Unscratched", showBackground = true)
 @Composable
-fun MainScreenUnscr atchedPreview() {
+fun MainScreenUnscratchedPreview() {
     O2Theme {
         MainScreenContent(
             uiState = MainScreenUiState(

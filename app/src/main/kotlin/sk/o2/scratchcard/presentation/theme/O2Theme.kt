@@ -1,8 +1,16 @@
 package sk.o2.scratchcard.presentation.theme
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 /**
@@ -80,50 +88,50 @@ fun O2ThemeDarkPreview() {
  */
 @Composable
 private fun ThemePreviewContent() {
-    androidx.compose.foundation.layout.Column(
-        modifier = androidx.compose.ui.Modifier
-            .androidx.compose.foundation.background(MaterialTheme.colorScheme.background)
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .padding(O2Spacing.md)
     ) {
         // Display text
-        androidx.compose.material3.Text(
+        Text(
             text = "O2 Theme",
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary
         )
 
-        androidx.compose.foundation.layout.Spacer(
-            modifier = androidx.compose.ui.Modifier.height(O2Spacing.sm)
+        Spacer(
+            modifier = Modifier.height(O2Spacing.sm)
         )
 
         // Headline
-        androidx.compose.material3.Text(
+        Text(
             text = "Design System",
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        androidx.compose.foundation.layout.Spacer(
-            modifier = androidx.compose.ui.Modifier.height(O2Spacing.md)
+        Spacer(
+            modifier = Modifier.height(O2Spacing.md)
         )
 
         // Body text
-        androidx.compose.material3.Text(
+        Text(
             text = "O2 Corporate Identity applied to Android with Material 3",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        androidx.compose.foundation.layout.Spacer(
-            modifier = androidx.compose.ui.Modifier.height(O2Spacing.lg)
+        Spacer(
+            modifier = Modifier.height(O2Spacing.lg)
         )
 
         // Primary button preview
-        androidx.compose.material3.Button(
+        Button(
             onClick = {},
             shape = O2Shapes.small
         ) {
-            androidx.compose.material3.Text("Primary Button")
+            Text("Primary Button")
         }
     }
 }

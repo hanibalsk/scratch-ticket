@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import sk.o2.scratchcard.data.di.IoDispatcher
 import sk.o2.scratchcard.data.remote.O2ApiService
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.domain.repository.ScratchCardRepository
@@ -32,7 +33,7 @@ import javax.inject.Singleton
 @Singleton
 class ScratchCardRepositoryImpl @Inject constructor(
     private val apiService: O2ApiService,
-    private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ScratchCardRepository {
 
     /**

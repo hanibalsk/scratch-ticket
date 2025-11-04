@@ -1,6 +1,9 @@
 package sk.o2.scratchcard.presentation.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -118,9 +121,9 @@ fun O2SecondaryButton(
 @Composable
 fun O2PrimaryButtonLightPreview() {
     O2Theme(darkTheme = false) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             O2PrimaryButton(text = "Scratch Card", onClick = {})
             O2PrimaryButton(text = "Activate", onClick = {})
@@ -133,9 +136,9 @@ fun O2PrimaryButtonLightPreview() {
 @Composable
 fun O2PrimaryButtonDarkPreview() {
     O2Theme(darkTheme = true) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             O2PrimaryButton(text = "Scratch Card", onClick = {})
             O2PrimaryButton(text = "Activate", onClick = {})
@@ -148,9 +151,9 @@ fun O2PrimaryButtonDarkPreview() {
 @Composable
 fun O2SecondaryButtonLightPreview() {
     O2Theme(darkTheme = false) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             O2SecondaryButton(text = "Retry", onClick = {})
             O2SecondaryButton(text = "Dismiss", onClick = {})
@@ -163,9 +166,9 @@ fun O2SecondaryButtonLightPreview() {
 @Composable
 fun O2SecondaryButtonDarkPreview() {
     O2Theme(darkTheme = true) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             O2SecondaryButton(text = "Retry", onClick = {})
             O2SecondaryButton(text = "Dismiss", onClick = {})
