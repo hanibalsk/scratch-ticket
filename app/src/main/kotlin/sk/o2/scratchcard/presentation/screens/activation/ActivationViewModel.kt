@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -74,6 +75,7 @@ class ActivationViewModel @Inject constructor(
      *
      * @param code UUID code to activate (from Scratched state)
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun activateCard(code: String) {
         _uiState.value = ActivationUiState.Loading
         Timber.d("Initiating activation for code: $code")

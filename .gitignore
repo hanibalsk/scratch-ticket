@@ -82,3 +82,6 @@ obj/
 ehthumbs.db
 Thumbs.db
 
+
+# Emulator helper scripts
+fix-emulator-dns.sh
