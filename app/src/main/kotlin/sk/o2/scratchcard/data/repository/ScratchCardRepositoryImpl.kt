@@ -116,15 +116,38 @@ class ScratchCardRepositoryImpl @Inject constructor(
             if (isValid) {
                 // Validation successful - transition to Activated
                 _cardState.value = ScratchCardState.Activated(code)
-                Timber.d("Activation successful - card activated")
+                Timber.i("Activation successful - card activated")
                 Result.success(true)
             } else {
-                // Validation failed - state remains Scratched
-                Timber.w("Activation failed - android version ${response.android} ≤ 277028")
-                Result.success(false)
+                // Validation failed - state remains Scratched (FR017)
+                Timber.w("Validation failed - android version ${response.android} ≤ 277028")
+                Result.failure(
+                    sk.o2.scratchcard.domain.model.DomainException.ValidationException(response.android)
+                )
             }
+        } catch (e: java.net.UnknownHostException) {
+            // Network error: No internet connection
+            Timber.e(e, "Network error: No internet connection")
+            Result.failure(sk.o2.scratchcard.domain.model.DomainException.NetworkException.NoConnection(e))
+        } catch (e: java.net.SocketTimeoutException) {
+            // Network error: Request timed out
+            Timber.e(e, "Network error: Request timed out after 10 seconds")
+            Result.failure(sk.o2.scratchcard.domain.model.DomainException.NetworkException.Timeout(e))
+        } catch (e: io.ktor.client.plugins.ClientRequestException) {
+            // HTTP error: 4xx status codes
+            Timber.e(e, "HTTP client error: ${e.response.status.value}")
+            Result.failure(sk.o2.scratchcard.domain.model.DomainException.HttpException.ClientError(e.response.status.value, e))
+        } catch (e: io.ktor.client.plugins.ServerResponseException) {
+            // HTTP error: 5xx status codes
+            Timber.e(e, "HTTP server error: ${e.response.status.value}")
+            Result.failure(sk.o2.scratchcard.domain.model.DomainException.HttpException.ServerError(e.response.status.value, e))
+        } catch (e: kotlinx.serialization.SerializationException) {
+            // Parsing error: Malformed JSON or missing fields
+            Timber.e(e, "Parsing error: Malformed API response")
+            Result.failure(sk.o2.scratchcard.domain.model.DomainException.ParsingException(e))
         } catch (e: Exception) {
-            Timber.e(e, "Activation operation failed")
+            // Unknown error
+            Timber.e(e, "Unknown error during activation")
             Result.failure(e)
         }
     }
