@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">O2 Scratch Card</string>
+
+    <!-- Screen titles -->
+    <string name="main_screen_title">Main</string>
+    <string name="scratch_screen_title">Scratch Card</string>
+    <string name="activation_screen_title">Activation</string>
+
+    <!-- Buttons -->
+    <string name="btn_go_to_scratch">Go to Scratch Screen</string>
+    <string name="btn_go_to_activation">Go to Activation Screen</string>
+    <string name="btn_scratch_card">Scratch Card</string>
+    <string name="btn_activate">Activate</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_dismiss">Dismiss</string>
+
+    <!-- State labels -->
+    <string name="state_unscratched">Unscratched</string>
+    <string name="state_scratched">Scratched</string>
+    <string name="state_activated">Activated</string>
+
+    <!-- Messages -->
+    <string name="msg_scratching_progress">Scratching… %d%%</string>
+    <string name="msg_code_revealed">Code Revealed!</string>
+    <string name="msg_activation_success">Card Activated Successfully!</string>
+
+    <!-- Errors -->
+    <string name="error_activation_failed_title">Activation Failed</string>
+    <string name="error_activation_failed_message">This scratch card could not be activated. Please try again or contact support.</string>
+    <string name="error_connection_title">Connection Error</string>
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_request_timeout">Request timed out</string>
+    <string name="error_service_title">Service Error</string>
+    <string name="error_service_unavailable">Service temporarily unavailable. Please try again later.</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="cd_state_badge">Current card state</string>
+    <string name="cd_loading_indicator">Loading</string>
+</resources>

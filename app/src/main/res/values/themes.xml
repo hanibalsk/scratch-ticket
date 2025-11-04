@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme (Material3 will be customized in Story 2.1 with O2 colors) -->
+    <style name="Theme.ScratchCard" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
