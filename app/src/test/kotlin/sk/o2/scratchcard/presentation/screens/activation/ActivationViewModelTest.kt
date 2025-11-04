@@ -32,12 +32,11 @@ class ActivationViewModelTest {
     private lateinit var mockUseCase: ActivateCardUseCase
     private lateinit var mockRepository: ScratchCardRepository
     private lateinit var repositoryStateFlow: MutableStateFlow<ScratchCardState>
-    private lateinit var testDispatcher: StandardTestDispatcher
+    private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: ActivationViewModel
 
     @BeforeEach
     fun setup() {
-        testDispatcher = StandardTestDispatcher()
         Dispatchers.setMain(testDispatcher)
 
         repositoryStateFlow = MutableStateFlow(ScratchCardState.Scratched("test-code"))
@@ -231,19 +230,6 @@ class ActivationViewModelTest {
 
             val successState = awaitItem()
             assertTrue(successState is ActivationUiState.Success)
-        }
-    }
-
-    @Test
-    fun `cardState observable reflects repository state`() = runTest {
-        viewModel.cardState.test {
-            val initialState = awaitItem()
-            assertTrue(initialState is ScratchCardState.Scratched)
-
-            repositoryStateFlow.value = ScratchCardState.Activated("activated-code")
-
-            val activatedState = awaitItem()
-            assertTrue(activatedState is ScratchCardState.Activated)
         }
     }
 

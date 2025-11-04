@@ -105,23 +105,4 @@ class ScratchCardStateTest {
         assertEquals(code, state.code)
         assertTrue(state.code.isNotEmpty())
     }
-
-    @Test
-    fun `state hierarchy is correctly structured`() {
-        val states: List<ScratchCardState> = listOf(
-            ScratchCardState.Unscratched,
-            ScratchCardState.Scratched("code1"),
-            ScratchCardState.Activated("code2")
-        )
-
-        // All instances are ScratchCardState
-        states.forEach { state ->
-            assertTrue(state is ScratchCardState)
-        }
-
-        // But each has unique type
-        assertTrue(states[0] is ScratchCardState.Unscratched)
-        assertTrue(states[1] is ScratchCardState.Scratched)
-        assertTrue(states[2] is ScratchCardState.Activated)
-    }
 }

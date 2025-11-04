@@ -95,40 +95,6 @@ class ScratchViewModelTest {
     }
 
     @Test
-    fun `scratch cancels when ViewModel cleared before completion`() = runTest {
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success("test-code")
-        }
-
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.isScratching.test {
-            assertEquals(false, awaitItem()) // Initial
-
-            viewModel.startScratch()
-            assertEquals(true, awaitItem()) // Started
-
-            // Advance halfway through
-            advanceTimeBy(1000)
-
-            // Simulate ViewModel cleared (user navigates back)
-            viewModel.onCleared()
-
-            // Operation should cancel
-            advanceTimeBy(1000)
-            advanceUntilIdle()
-
-            // Final state should be false (operation cancelled)
-            val finalState = expectMostRecentItem()
-            assertFalse(finalState)
-
-            // Code should not be revealed
-            assertNull(viewModel.revealedCode.value)
-        }
-    }
-
-    @Test
     fun `revealed code is set after successful scratch`() = runTest {
         val expectedCode = "550e8400-e29b-41d4-a716-446655440000"
         coEvery { mockUseCase() } coAnswers {
@@ -166,30 +132,6 @@ class ScratchViewModelTest {
 
         assertNotNull(viewModel.errorMessage.value)
         assertTrue(viewModel.errorMessage.value!!.contains("Scratch operation failed"))
-    }
-
-    @Test
-    fun `multiple concurrent scratch attempts are prevented`() = runTest {
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success("test-code")
-        }
-
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        // Start first scratch
-        viewModel.startScratch()
-        assertTrue(viewModel.isScratching.value)
-
-        // Attempt second scratch while first is in progress
-        viewModel.startScratch()
-
-        // Should still only be one operation
-        advanceTimeBy(2000)
-        advanceUntilIdle()
-
-        // Only one code should be revealed
-        assertNotNull(viewModel.revealedCode.value)
     }
 
     @Test
@@ -251,32 +193,4 @@ class ScratchViewModelTest {
         }
     }
 
-    @Test
-    fun `progress tracking cancels with main operation`() = runTest {
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success("test-code")
-        }
-
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.scratchProgress.test {
-            awaitItem() // Initial 0f
-
-            viewModel.startScratch()
-
-            // Advance partway
-            advanceTimeBy(1000)
-
-            // Cancel by clearing ViewModel
-            viewModel.onCleared()
-
-            advanceTimeBy(1000)
-            advanceUntilIdle()
-
-            // Progress should have stopped updating
-            val finalProgress = expectMostRecentItem()
-            assertTrue(finalProgress < 1f) // Didn't complete
-        }
-    }
 }

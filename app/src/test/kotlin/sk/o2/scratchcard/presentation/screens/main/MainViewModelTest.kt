@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -22,6 +23,7 @@ import sk.o2.scratchcard.domain.repository.ScratchCardRepository
  */
 class MainViewModelTest {
 
+    private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var mockRepository: ScratchCardRepository
     private lateinit var repositoryStateFlow: MutableStateFlow<ScratchCardState>
     private lateinit var viewModel: MainViewModel
@@ -36,7 +38,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `initial UI state is Unscratched with activation disabled`() = runTest {
+    fun `initial UI state is Unscratched with activation disabled`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             val state = awaitItem()
 
@@ -46,7 +48,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `UI state updates when repository state changes to Scratched`() = runTest {
+    fun `UI state updates when repository state changes to Scratched`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             // Initial state
             val initialState = awaitItem()
@@ -65,7 +67,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `UI state updates when repository state changes to Activated`() = runTest {
+    fun `UI state updates when repository state changes to Activated`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             // Skip initial state
             awaitItem()
@@ -81,9 +83,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `activation button disabled when Unscratched`() = runTest {
-        repositoryStateFlow.value = ScratchCardState.Unscratched
-
+    fun `activation button disabled when Unscratched`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             val state = awaitItem()
             assertFalse(state.isActivationEnabled)
@@ -91,47 +91,57 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `activation button enabled when Scratched`() = runTest {
-        repositoryStateFlow.value = ScratchCardState.Scratched("test-code")
-
+    fun `activation button enabled when Scratched`() = runTest(testDispatcher) {
         viewModel.uiState.test {
+            // Skip initial state
+            awaitItem()
+
+            // Change to Scratched
+            repositoryStateFlow.value = ScratchCardState.Scratched("test-code")
+
             val state = awaitItem()
             assertTrue(state.isActivationEnabled)
         }
     }
 
     @Test
-    fun `activation button enabled when Activated`() = runTest {
-        repositoryStateFlow.value = ScratchCardState.Activated("test-code")
-
+    fun `activation button enabled when Activated`() = runTest(testDispatcher) {
         viewModel.uiState.test {
+            // Skip initial state
+            awaitItem()
+
+            // Change to Activated
+            repositoryStateFlow.value = ScratchCardState.Activated("test-code")
+
             val state = awaitItem()
             assertTrue(state.isActivationEnabled)
         }
     }
 
     @Test
-    fun `UI state transformation handles all ScratchCardState variants`() = runTest {
-        val states = listOf(
-            ScratchCardState.Unscratched to false,
-            ScratchCardState.Scratched("uuid-1") to true,
-            ScratchCardState.Activated("uuid-2") to true
-        )
+    fun `UI state transformation handles all ScratchCardState variants`() = runTest(testDispatcher) {
+        viewModel.uiState.test {
+            // Verify initial state
+            val initial = awaitItem()
+            assertEquals(ScratchCardState.Unscratched, initial.cardState)
+            assertFalse(initial.isActivationEnabled)
 
-        states.forEach { (cardState, expectedActivationEnabled) ->
-            repositoryStateFlow.value = cardState
+            // Test Scratched state
+            repositoryStateFlow.value = ScratchCardState.Scratched("uuid-1")
+            val scratched = awaitItem()
+            assertEquals(ScratchCardState.Scratched("uuid-1"), scratched.cardState)
+            assertTrue(scratched.isActivationEnabled)
 
-            viewModel.uiState.test {
-                val uiState = awaitItem()
-                assertEquals(cardState, uiState.cardState)
-                assertEquals(expectedActivationEnabled, uiState.isActivationEnabled)
-                cancelAndIgnoreRemainingEvents()
-            }
+            // Test Activated state
+            repositoryStateFlow.value = ScratchCardState.Activated("uuid-2")
+            val activated = awaitItem()
+            assertEquals(ScratchCardState.Activated("uuid-2"), activated.cardState)
+            assertTrue(activated.isActivationEnabled)
         }
     }
 
     @Test
-    fun `multiple state transitions are observed correctly`() = runTest {
+    fun `multiple state transitions are observed correctly`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             // Initial: Unscratched
             val state1 = awaitItem()
@@ -153,13 +163,16 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `ViewModel state survives configuration changes via stateIn`() = runTest {
+    fun `ViewModel state survives configuration changes via stateIn`() = runTest(testDispatcher) {
         // stateIn with viewModelScope ensures state survives ViewModel recreation
         // This test verifies the StateFlow is properly configured
 
-        repositoryStateFlow.value = ScratchCardState.Scratched("persistent-uuid")
-
         viewModel.uiState.test {
+            // Skip initial state
+            awaitItem()
+
+            repositoryStateFlow.value = ScratchCardState.Scratched("persistent-uuid")
+
             val state = awaitItem()
 
             // State should be immediately available (stateIn provides initial value)

@@ -100,13 +100,6 @@ class ScreenTest {
     }
 
     @Test
-    fun `all screens implement Screen interface`() {
-        assertTrue(Screen.Main is Screen)
-        assertTrue(Screen.Scratch is Screen)
-        assertTrue(Screen.Activation is Screen)
-    }
-
-    @Test
     fun `route strings follow lowercase naming convention`() {
         val screens = listOf(Screen.Main, Screen.Scratch, Screen.Activation)
 

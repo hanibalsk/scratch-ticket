@@ -4,8 +4,10 @@ import app.cash.turbine.test
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.async
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -28,13 +30,12 @@ import sk.o2.scratchcard.domain.model.ScratchCardState
 class ScratchCardRepositoryImplTest {
 
     private lateinit var mockApiService: O2ApiService
-    private lateinit var testDispatcher: StandardTestDispatcher
+    private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: ScratchCardRepositoryImpl
 
     @BeforeEach
     fun setup() {
         mockApiService = mockk()
-        testDispatcher = StandardTestDispatcher()
         repository = ScratchCardRepositoryImpl(mockApiService, testDispatcher)
     }
 
@@ -52,7 +53,7 @@ class ScratchCardRepositoryImplTest {
             assertEquals(ScratchCardState.Unscratched, awaitItem())
 
             // Start scratch operation
-            val resultDeferred = kotlinx.coroutines.async { repository.scratchCard() }
+            val resultDeferred = async { repository.scratchCard() }
 
             // Advance time by 1999ms - should still be Unscratched
             advanceTimeBy(1999)
@@ -145,16 +146,17 @@ class ScratchCardRepositoryImplTest {
     }
 
     @Test
-    fun `activateCard returns false when API returns android equal to 277028`() = runTest(testDispatcher) {
+    fun `activateCard returns failure when API returns android equal to 277028`() = runTest(testDispatcher) {
         val testCode = "test-uuid"
         val apiResponse = O2VersionResponse(android = 277028) // Exactly at threshold - FAIL
         coEvery { mockApiService.validateCode(testCode) } returns apiResponse
 
         val result = repository.activateCard(testCode)
+        advanceUntilIdle()
 
-        // Verify result is success but with false value
-        assertTrue(result.isSuccess)
-        assertEquals(false, result.getOrNull())
+        // Verify result is failure with ValidationException
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
 
         // Verify state did NOT change (remains Unscratched in this test context)
         val currentState = repository.cardState.value
@@ -162,15 +164,17 @@ class ScratchCardRepositoryImplTest {
     }
 
     @Test
-    fun `activateCard returns false when API returns android less than 277028`() = runTest(testDispatcher) {
+    fun `activateCard returns failure when API returns android less than 277028`() = runTest(testDispatcher) {
         val testCode = "test-uuid"
         val apiResponse = O2VersionResponse(android = 200000) // Well below threshold
         coEvery { mockApiService.validateCode(testCode) } returns apiResponse
 
         val result = repository.activateCard(testCode)
+        advanceUntilIdle()
 
-        assertTrue(result.isSuccess)
-        assertEquals(false, result.getOrNull())
+        // Verify result is failure with ValidationException
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
 
         // State should not transition
         val currentState = repository.cardState.value
@@ -195,7 +199,7 @@ class ScratchCardRepositoryImplTest {
     @Test
     fun `cardState StateFlow emits to multiple collectors`() = runTest(testDispatcher) {
         // Start two collectors
-        val collector1 = kotlinx.coroutines.async {
+        val collector1 = async {
             repository.cardState.test {
                 awaitItem() // Initial
                 val scratched = awaitItem() // After scratch
@@ -204,7 +208,7 @@ class ScratchCardRepositoryImplTest {
             }
         }
 
-        val collector2 = kotlinx.coroutines.async {
+        val collector2 = async {
             repository.cardState.test {
                 awaitItem() // Initial
                 val scratched = awaitItem() // After scratch
@@ -252,8 +256,10 @@ class ScratchCardRepositoryImplTest {
         coEvery { mockApiService.validateCode(testCode) } returns apiResponse
 
         val result = repository.activateCard(testCode)
+        advanceUntilIdle()
 
-        assertTrue(result.isSuccess)
-        assertEquals(false, result.getOrNull())
+        // Verify result is failure with ValidationException
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
     }
 }
