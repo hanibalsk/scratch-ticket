@@ -1,0 +1,24 @@
+# Ignore all current directories
+.claude/
+.cursor/
+bmad/
+docs/
+
+# Common gitignore patterns
+.DS_Store
+*.log
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
