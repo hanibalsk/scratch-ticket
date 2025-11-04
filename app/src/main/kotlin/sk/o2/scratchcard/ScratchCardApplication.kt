@@ -10,7 +10,6 @@ import timber.log.Timber
  */
 @HiltAndroidApp
 class ScratchCardApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
 

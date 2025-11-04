@@ -11,7 +11,6 @@ package sk.o2.scratchcard.domain.model
  * @see Activated Final state after successful API validation
  */
 sealed class ScratchCardState {
-
     /**
      * Initial state - card has not been scratched yet.
      *
@@ -28,7 +27,9 @@ sealed class ScratchCardState {
      *
      * @property code Unique UUID string generated during scratch operation
      */
-    data class Scratched(val code: String) : ScratchCardState()
+    data class Scratched(
+        val code: String,
+    ) : ScratchCardState()
 
     /**
      * Card has been successfully activated with the API.
@@ -38,5 +39,7 @@ sealed class ScratchCardState {
      *
      * @property code The UUID code that was successfully activated
      */
-    data class Activated(val code: String) : ScratchCardState()
+    data class Activated(
+        val code: String,
+    ) : ScratchCardState()
 }

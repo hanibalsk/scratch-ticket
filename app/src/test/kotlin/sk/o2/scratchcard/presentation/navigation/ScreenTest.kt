@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
  * - All navigation destinations are defined
  */
 class ScreenTest {
-
     @Test
     fun `Main screen route is main`() {
         assertEquals("main", Screen.Main.route)
@@ -31,11 +30,12 @@ class ScreenTest {
 
     @Test
     fun `all routes are unique`() {
-        val routes = listOf(
-            Screen.Main.route,
-            Screen.Scratch.route,
-            Screen.Activation.route
-        )
+        val routes =
+            listOf(
+                Screen.Main.route,
+                Screen.Scratch.route,
+                Screen.Activation.route,
+            )
 
         // Check for duplicate routes
         val uniqueRoutes = routes.toSet()
@@ -44,11 +44,12 @@ class ScreenTest {
 
     @Test
     fun `all routes are non-empty`() {
-        val screens = listOf(
-            Screen.Main,
-            Screen.Scratch,
-            Screen.Activation
-        )
+        val screens =
+            listOf(
+                Screen.Main,
+                Screen.Scratch,
+                Screen.Activation,
+            )
 
         screens.forEach { screen ->
             assertTrue(screen.route.isNotEmpty(), "${screen::class.simpleName} route must not be empty")
@@ -81,19 +82,21 @@ class ScreenTest {
 
     @Test
     fun `sealed interface provides exhaustive when expressions`() {
-        val screens: List<Screen> = listOf(
-            Screen.Main,
-            Screen.Scratch,
-            Screen.Activation
-        )
+        val screens: List<Screen> =
+            listOf(
+                Screen.Main,
+                Screen.Scratch,
+                Screen.Activation,
+            )
 
         screens.forEach { screen ->
             // When expression must be exhaustive for sealed interface
-            val description = when (screen) {
-                Screen.Main -> "Main screen"
-                Screen.Scratch -> "Scratch screen"
-                Screen.Activation -> "Activation screen"
-            }
+            val description =
+                when (screen) {
+                    Screen.Main -> "Main screen"
+                    Screen.Scratch -> "Scratch screen"
+                    Screen.Activation -> "Activation screen"
+                }
 
             assertNotNull(description)
         }
@@ -107,7 +110,7 @@ class ScreenTest {
             assertEquals(
                 screen.route.lowercase(),
                 screen.route,
-                "${screen::class.simpleName} route should be lowercase"
+                "${screen::class.simpleName} route should be lowercase",
             )
         }
     }
@@ -120,7 +123,7 @@ class ScreenTest {
         screens.forEach { screen ->
             assertTrue(
                 validPattern.matches(screen.route),
-                "${screen::class.simpleName} route should only contain lowercase letters"
+                "${screen::class.simpleName} route should only contain lowercase letters",
             )
         }
     }

@@ -27,7 +27,6 @@ import sk.o2.scratchcard.domain.usecase.ScratchCardUseCase
  * - Multiple scratch attempts prevented
  */
 class ScratchViewModelTest {
-
     private lateinit var mockUseCase: ScratchCardUseCase
     private lateinit var mockRepository: ScratchCardRepository
     private lateinit var repositoryStateFlow: MutableStateFlow<ScratchCardState>
@@ -37,160 +36,167 @@ class ScratchViewModelTest {
     fun setup() {
         repositoryStateFlow = MutableStateFlow(ScratchCardState.Unscratched)
         mockUseCase = mockk()
-        mockRepository = mockk {
-            every { cardState } returns repositoryStateFlow
-        }
+        mockRepository =
+            mockk {
+                every { cardState } returns repositoryStateFlow
+            }
     }
 
     @Test
-    fun `scratch completes after exactly 2 seconds`() = runTest {
-        val testCode = "test-uuid-12345"
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success(testCode)
-        }
+    fun `scratch completes after exactly 2 seconds`() =
+        runTest {
+            val testCode = "test-uuid-12345"
+            coEvery { mockUseCase() } coAnswers {
+                delay(2000)
+                Result.success(testCode)
+            }
 
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.startScratch()
-
-        // At 1999ms, should still be scratching
-        advanceTimeBy(1999)
-        assertTrue(viewModel.isScratching.value)
-
-        // At 2000ms, should be complete
-        advanceTimeBy(1)
-        advanceUntilIdle()
-
-        assertFalse(viewModel.isScratching.value)
-        assertEquals(testCode, viewModel.revealedCode.value)
-    }
-
-    @Test
-    fun `scratch progress updates from 0 to 1`() = runTest {
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success("test-code")
-        }
-
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.scratchProgress.test {
-            assertEquals(0f, awaitItem()) // Initial
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
 
             viewModel.startScratch()
 
-            // Progress should update gradually
-            val progress1 = awaitItem()
-            assertTrue(progress1 >= 0f && progress1 <= 1f)
+            // At 1999ms, should still be scratching
+            advanceTimeBy(1999)
+            assertTrue(viewModel.isScratching.value)
 
-            // Advance time and check final progress
-            advanceTimeBy(2000)
+            // At 2000ms, should be complete
+            advanceTimeBy(1)
             advanceUntilIdle()
 
-            // Should eventually reach 1f
-            val finalProgress = expectMostRecentItem()
-            assertTrue(finalProgress >= 0.99f && finalProgress <= 1f)
+            assertFalse(viewModel.isScratching.value)
+            assertEquals(testCode, viewModel.revealedCode.value)
         }
-    }
 
     @Test
-    fun `revealed code is set after successful scratch`() = runTest {
-        val expectedCode = "550e8400-e29b-41d4-a716-446655440000"
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success(expectedCode)
+    fun `scratch progress updates from 0 to 1`() =
+        runTest {
+            coEvery { mockUseCase() } coAnswers {
+                delay(2000)
+                Result.success("test-code")
+            }
+
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
+
+            viewModel.scratchProgress.test {
+                assertEquals(0f, awaitItem()) // Initial
+
+                viewModel.startScratch()
+
+                // Progress should update gradually
+                val progress1 = awaitItem()
+                assertTrue(progress1 >= 0f && progress1 <= 1f)
+
+                // Advance time and check final progress
+                advanceTimeBy(2000)
+                advanceUntilIdle()
+
+                // Should eventually reach 1f
+                val finalProgress = expectMostRecentItem()
+                assertTrue(finalProgress >= 0.99f && finalProgress <= 1f)
+            }
         }
-
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.revealedCode.test {
-            assertNull(awaitItem()) // Initial
-
-            viewModel.startScratch()
-
-            advanceTimeBy(2000)
-            advanceUntilIdle()
-
-            assertEquals(expectedCode, awaitItem())
-        }
-    }
 
     @Test
-    fun `error message set when scratch fails`() = runTest {
-        val testException = RuntimeException("Test error")
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.failure(testException)
+    fun `revealed code is set after successful scratch`() =
+        runTest {
+            val expectedCode = "550e8400-e29b-41d4-a716-446655440000"
+            coEvery { mockUseCase() } coAnswers {
+                delay(2000)
+                Result.success(expectedCode)
+            }
+
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
+
+            viewModel.revealedCode.test {
+                assertNull(awaitItem()) // Initial
+
+                viewModel.startScratch()
+
+                advanceTimeBy(2000)
+                advanceUntilIdle()
+
+                assertEquals(expectedCode, awaitItem())
+            }
         }
 
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
-
-        viewModel.startScratch()
-        advanceTimeBy(2000)
-        advanceUntilIdle()
-
-        assertNotNull(viewModel.errorMessage.value)
-        assertTrue(viewModel.errorMessage.value!!.contains("Scratch operation failed"))
-    }
-
     @Test
-    fun `clearError resets error message`() = runTest {
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
+    fun `error message set when scratch fails`() =
+        runTest {
+            val testException = RuntimeException("Test error")
+            coEvery { mockUseCase() } coAnswers {
+                delay(2000)
+                Result.failure(testException)
+            }
 
-        viewModel.errorMessage.test {
-            assertNull(awaitItem())
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
 
-            // Manually set error (simulating failure)
-            coEvery { mockUseCase() } returns Result.failure(RuntimeException("Test"))
             viewModel.startScratch()
             advanceTimeBy(2000)
             advanceUntilIdle()
 
-            assertNotNull(awaitItem())
-
-            // Clear error
-            viewModel.clearError()
-            assertNull(awaitItem())
+            assertNotNull(viewModel.errorMessage.value)
+            assertTrue(viewModel.errorMessage.value!!.contains("Scratch operation failed"))
         }
-    }
 
     @Test
-    fun `cardState observable reflects repository state`() = runTest {
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
+    fun `clearError resets error message`() =
+        runTest {
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
 
-        viewModel.cardState.test {
-            assertEquals(ScratchCardState.Unscratched, awaitItem())
+            viewModel.errorMessage.test {
+                assertNull(awaitItem())
 
-            // Change repository state
-            repositoryStateFlow.value = ScratchCardState.Scratched("new-code")
+                // Manually set error (simulating failure)
+                coEvery { mockUseCase() } returns Result.failure(RuntimeException("Test"))
+                viewModel.startScratch()
+                advanceTimeBy(2000)
+                advanceUntilIdle()
 
-            val scratchedState = awaitItem()
-            assertTrue(scratchedState is ScratchCardState.Scratched)
-            assertEquals("new-code", (scratchedState as ScratchCardState.Scratched).code)
+                assertNotNull(awaitItem())
+
+                // Clear error
+                viewModel.clearError()
+                assertNull(awaitItem())
+            }
         }
-    }
 
     @Test
-    fun `isScratching resets to false after completion`() = runTest {
-        coEvery { mockUseCase() } coAnswers {
-            delay(2000)
-            Result.success("test-code")
+    fun `cardState observable reflects repository state`() =
+        runTest {
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
+
+            viewModel.cardState.test {
+                assertEquals(ScratchCardState.Unscratched, awaitItem())
+
+                // Change repository state
+                repositoryStateFlow.value = ScratchCardState.Scratched("new-code")
+
+                val scratchedState = awaitItem()
+                assertTrue(scratchedState is ScratchCardState.Scratched)
+                assertEquals("new-code", (scratchedState as ScratchCardState.Scratched).code)
+            }
         }
 
-        viewModel = ScratchViewModel(mockUseCase, mockRepository)
+    @Test
+    fun `isScratching resets to false after completion`() =
+        runTest {
+            coEvery { mockUseCase() } coAnswers {
+                delay(2000)
+                Result.success("test-code")
+            }
 
-        viewModel.isScratching.test {
-            assertFalse(awaitItem()) // Initial
+            viewModel = ScratchViewModel(mockUseCase, mockRepository)
 
-            viewModel.startScratch()
-            assertTrue(awaitItem()) // Started
+            viewModel.isScratching.test {
+                assertFalse(awaitItem()) // Initial
 
-            advanceTimeBy(2000)
-            advanceUntilIdle()
+                viewModel.startScratch()
+                assertTrue(awaitItem()) // Started
 
-            assertFalse(awaitItem()) // Completed
+                advanceTimeBy(2000)
+                advanceUntilIdle()
+
+                assertFalse(awaitItem()) // Completed
+            }
         }
-    }
-
 }

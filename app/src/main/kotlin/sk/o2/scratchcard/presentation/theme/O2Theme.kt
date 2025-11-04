@@ -40,19 +40,20 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun O2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = if (darkTheme) {
-        DarkColorScheme
-    } else {
-        LightColorScheme
-    }
+    val colorScheme =
+        if (darkTheme) {
+            DarkColorScheme
+        } else {
+            LightColorScheme
+        }
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = O2Typography,
         shapes = O2Shapes,
-        content = content
+        content = content,
     )
 }
 
@@ -89,47 +90,48 @@ fun O2ThemeDarkPreview() {
 @Composable
 private fun ThemePreviewContent() {
     Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(O2Spacing.md)
+        modifier =
+            Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .padding(O2Spacing.md),
     ) {
         // Display text
         Text(
             text = "O2 Theme",
             style = MaterialTheme.typography.displayLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
 
         Spacer(
-            modifier = Modifier.height(O2Spacing.sm)
+            modifier = Modifier.height(O2Spacing.sm),
         )
 
         // Headline
         Text(
             text = "Design System",
             style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Spacer(
-            modifier = Modifier.height(O2Spacing.md)
+            modifier = Modifier.height(O2Spacing.md),
         )
 
         // Body text
         Text(
             text = "O2 Corporate Identity applied to Android with Material 3",
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Spacer(
-            modifier = Modifier.height(O2Spacing.lg)
+            modifier = Modifier.height(O2Spacing.lg),
         )
 
         // Primary button preview
         Button(
             onClick = {},
-            shape = O2Shapes.small
+            shape = O2Shapes.small,
         ) {
             Text("Primary Button")
         }

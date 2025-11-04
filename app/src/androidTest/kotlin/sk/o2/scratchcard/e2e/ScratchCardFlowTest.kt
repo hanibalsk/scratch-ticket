@@ -1,7 +1,16 @@
 package sk.o2.scratchcard.e2e
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertExists
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.fetchSemanticsNodes
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.waitForIdle
+import androidx.compose.ui.test.waitUntil
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -28,7 +37,6 @@ import sk.o2.scratchcard.util.performBack
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class ScratchCardFlowTest {
-
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -98,12 +106,11 @@ class ScratchCardFlowTest {
             composeTestRule
                 .onAllNodesWithText("Activation Successful!", substring = true)
                 .fetchSemanticsNodes()
-                .isNotEmpty()
-                ||
+                .isNotEmpty() ||
                 composeTestRule
-                .onAllNodesWithText("Activated", substring = true)
-                .fetchSemanticsNodes()
-                .isNotEmpty()
+                    .onAllNodesWithText("Activated", substring = true)
+                    .fetchSemanticsNodes()
+                    .isNotEmpty()
         }
 
         // Verify success or activated state
@@ -157,15 +164,17 @@ class ScratchCardFlowTest {
         composeTestRule.waitForIdle()
 
         // Verify we have a valid state (Unscratched or Scratched are both OK)
-        val hasUnscratched = composeTestRule
-            .onAllNodesWithText("Unscratched")
-            .fetchSemanticsNodes()
-            .isNotEmpty()
+        val hasUnscratched =
+            composeTestRule
+                .onAllNodesWithText("Unscratched")
+                .fetchSemanticsNodes()
+                .isNotEmpty()
 
-        val hasScratched = composeTestRule
-            .onAllNodesWithText("Scratched")
-            .fetchSemanticsNodes()
-            .isNotEmpty()
+        val hasScratched =
+            composeTestRule
+                .onAllNodesWithText("Scratched")
+                .fetchSemanticsNodes()
+                .isNotEmpty()
 
         // At least one state should be present
         assert(hasUnscratched || hasScratched) {

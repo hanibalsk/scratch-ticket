@@ -27,39 +27,41 @@ import javax.inject.Inject
  * @property repository Scratch card repository (injected via Hilt)
  */
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    repository: ScratchCardRepository
-) : ViewModel() {
-
-    /**
-     * UI state derived from repository card state.
-     *
-     * Transformation logic:
-     * - Includes current card state
-     * - Calculates whether activation button should be enabled
-     *
-     * The StateFlow is hot and shared across multiple collectors.
-     * Uses WhileSubscribed(5000) to keep upstream active for 5 seconds
-     * after last collector disappears, allowing quick re-subscription
-     * without restarting the flow.
-     */
-    val uiState: StateFlow<MainScreenUiState> = repository.cardState
-        .map { cardState ->
-            MainScreenUiState(
-                cardState = cardState,
-                isActivationEnabled = when (cardState) {
-                    is ScratchCardState.Unscratched -> false
-                    is ScratchCardState.Scratched -> true
-                    is ScratchCardState.Activated -> true
-                }
-            )
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = MainScreenUiState()
-        )
-}
+class MainViewModel
+    @Inject
+    constructor(
+        repository: ScratchCardRepository,
+    ) : ViewModel() {
+        /**
+         * UI state derived from repository card state.
+         *
+         * Transformation logic:
+         * - Includes current card state
+         * - Calculates whether activation button should be enabled
+         *
+         * The StateFlow is hot and shared across multiple collectors.
+         * Uses WhileSubscribed(5000) to keep upstream active for 5 seconds
+         * after last collector disappears, allowing quick re-subscription
+         * without restarting the flow.
+         */
+        val uiState: StateFlow<MainScreenUiState> =
+            repository.cardState
+                .map { cardState ->
+                    MainScreenUiState(
+                        cardState = cardState,
+                        isActivationEnabled =
+                            when (cardState) {
+                                is ScratchCardState.Unscratched -> false
+                                is ScratchCardState.Scratched -> true
+                                is ScratchCardState.Activated -> true
+                            },
+                    )
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = MainScreenUiState(),
+                )
+    }
 
 /**
  * UI state for Main Screen.
@@ -73,5 +75,5 @@ class MainViewModel @Inject constructor(
  */
 data class MainScreenUiState(
     val cardState: ScratchCardState = ScratchCardState.Unscratched,
-    val isActivationEnabled: Boolean = false
+    val isActivationEnabled: Boolean = false,
 )

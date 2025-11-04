@@ -20,31 +20,30 @@ import javax.inject.Inject
  *
  * @property repository The scratch card repository for data operations
  */
-class ScratchCardUseCase @Inject constructor(
-    private val repository: ScratchCardRepository
-) {
-
-    /**
-     * Execute the scratch card operation.
-     *
-     * Performs a 2-second scratch operation that generates a UUID code.
-     * The operation is observable through the repository's cardState StateFlow.
-     *
-     * Usage:
-     * ```kotlin
-     * viewModelScope.launch {
-     *     scratchCardUseCase().onSuccess { code ->
-     *         // Handle revealed code
-     *     }.onFailure { error ->
-     *         // Handle error
-     *     }
-     * }
-     * ```
-     *
-     * @return Result containing the revealed UUID code on success,
-     *         or exception on failure (e.g., cancellation, unexpected error)
-     */
-    suspend operator fun invoke(): Result<String> {
-        return repository.scratchCard()
+class ScratchCardUseCase
+    @Inject
+    constructor(
+        private val repository: ScratchCardRepository,
+    ) {
+        /**
+         * Execute the scratch card operation.
+         *
+         * Performs a 2-second scratch operation that generates a UUID code.
+         * The operation is observable through the repository's cardState StateFlow.
+         *
+         * Usage:
+         * ```kotlin
+         * viewModelScope.launch {
+         *     scratchCardUseCase().onSuccess { code ->
+         *         // Handle revealed code
+         *     }.onFailure { error ->
+         *         // Handle error
+         *     }
+         * }
+         * ```
+         *
+         * @return Result containing the revealed UUID code on success,
+         *         or exception on failure (e.g., cancellation, unexpected error)
+         */
+        suspend operator fun invoke(): Result<String> = repository.scratchCard()
     }
-}

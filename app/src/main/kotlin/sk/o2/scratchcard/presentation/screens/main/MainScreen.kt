@@ -43,7 +43,7 @@ fun MainScreen(
     onNavigateToScratch: () -> Unit,
     onNavigateToActivation: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
 ) {
     // Observe UI state with lifecycle awareness
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,7 +52,7 @@ fun MainScreen(
         uiState = uiState,
         onNavigateToScratch = onNavigateToScratch,
         onNavigateToActivation = onNavigateToActivation,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -72,20 +72,21 @@ private fun MainScreenContent(
     uiState: MainScreenUiState,
     onNavigateToScratch: () -> Unit,
     onNavigateToActivation: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(O2Spacing.md),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(O2Spacing.md),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         // App title
         Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
         )
 
         Spacer(modifier = Modifier.height(O2Spacing.lg))
@@ -99,7 +100,7 @@ private fun MainScreenContent(
         O2PrimaryButton(
             text = stringResource(R.string.btn_go_to_scratch),
             onClick = onNavigateToScratch,
-            enabled = true
+            enabled = true,
         )
 
         Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -108,7 +109,7 @@ private fun MainScreenContent(
         O2PrimaryButton(
             text = stringResource(R.string.btn_go_to_activation),
             onClick = onNavigateToActivation,
-            enabled = uiState.isActivationEnabled
+            enabled = uiState.isActivationEnabled,
         )
     }
 }
@@ -122,12 +123,13 @@ private fun MainScreenContent(
 fun MainScreenUnscratchedPreview() {
     O2Theme {
         MainScreenContent(
-            uiState = MainScreenUiState(
-                cardState = ScratchCardState.Unscratched,
-                isActivationEnabled = false
-            ),
+            uiState =
+                MainScreenUiState(
+                    cardState = ScratchCardState.Unscratched,
+                    isActivationEnabled = false,
+                ),
             onNavigateToScratch = {},
-            onNavigateToActivation = {}
+            onNavigateToActivation = {},
         )
     }
 }
@@ -137,12 +139,13 @@ fun MainScreenUnscratchedPreview() {
 fun MainScreenScratchedPreview() {
     O2Theme {
         MainScreenContent(
-            uiState = MainScreenUiState(
-                cardState = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"),
-                isActivationEnabled = true
-            ),
+            uiState =
+                MainScreenUiState(
+                    cardState = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"),
+                    isActivationEnabled = true,
+                ),
             onNavigateToScratch = {},
-            onNavigateToActivation = {}
+            onNavigateToActivation = {},
         )
     }
 }
@@ -152,12 +155,13 @@ fun MainScreenScratchedPreview() {
 fun MainScreenActivatedPreview() {
     O2Theme {
         MainScreenContent(
-            uiState = MainScreenUiState(
-                cardState = ScratchCardState.Activated("550e8400-e29b-41d4-a716-446655440000"),
-                isActivationEnabled = true
-            ),
+            uiState =
+                MainScreenUiState(
+                    cardState = ScratchCardState.Activated("550e8400-e29b-41d4-a716-446655440000"),
+                    isActivationEnabled = true,
+                ),
             onNavigateToScratch = {},
-            onNavigateToActivation = {}
+            onNavigateToActivation = {},
         )
     }
 }

@@ -28,7 +28,6 @@ import sk.o2.scratchcard.domain.usecase.ActivateCardUseCase
  * - Retry functionality
  */
 class ActivationViewModelTest {
-
     private lateinit var mockUseCase: ActivateCardUseCase
     private lateinit var mockRepository: ScratchCardRepository
     private lateinit var repositoryStateFlow: MutableStateFlow<ScratchCardState>
@@ -41,197 +40,213 @@ class ActivationViewModelTest {
 
         repositoryStateFlow = MutableStateFlow(ScratchCardState.Scratched("test-code"))
         mockUseCase = mockk()
-        mockRepository = mockk {
-            every { cardState } returns repositoryStateFlow
-        }
+        mockRepository =
+            mockk {
+                every { cardState } returns repositoryStateFlow
+            }
 
         viewModel = ActivationViewModel(mockUseCase, mockRepository, testDispatcher)
     }
 
     @Test
-    fun `initial UI state is Idle`() = runTest {
-        viewModel.uiState.test {
-            val state = awaitItem()
-            assertTrue(state is ActivationUiState.Idle)
+    fun `initial UI state is Idle`() =
+        runTest {
+            viewModel.uiState.test {
+                val state = awaitItem()
+                assertTrue(state is ActivationUiState.Idle)
+            }
         }
-    }
 
     @Test
-    fun `activateCard transitions to Loading then Success`() = runTest(testDispatcher) {
-        coEvery { mockUseCase("test-code") } returns Result.success(true)
+    fun `activateCard transitions to Loading then Success`() =
+        runTest(testDispatcher) {
+            coEvery { mockUseCase("test-code") } returns Result.success(true)
 
-        viewModel.uiState.test {
-            assertEquals(ActivationUiState.Idle, awaitItem())
+            viewModel.uiState.test {
+                assertEquals(ActivationUiState.Idle, awaitItem())
+
+                viewModel.activateCard("test-code")
+
+                assertEquals(ActivationUiState.Loading, awaitItem())
+
+                advanceUntilIdle()
+
+                val finalState = awaitItem()
+                assertTrue(finalState is ActivationUiState.Success)
+            }
+        }
+
+    @Test
+    fun `activateCard maps ValidationException to Validation error`() =
+        runTest(testDispatcher) {
+            val validationError = DomainException.ValidationException(277028)
+            coEvery { mockUseCase("test-code") } returns Result.failure(validationError)
+
+            viewModel.uiState.test {
+                awaitItem() // Idle
+
+                viewModel.activateCard("test-code")
+                awaitItem() // Loading
+
+                advanceUntilIdle()
+
+                val errorState = awaitItem() as ActivationUiState.Error
+                assertTrue(errorState.errorType is ErrorType.Validation)
+                assertEquals(277028, (errorState.errorType as ErrorType.Validation).androidVersion)
+            }
+        }
+
+    @Test
+    fun `activateCard maps NoConnection to Network error`() =
+        runTest(testDispatcher) {
+            val networkError =
+                DomainException.NetworkException.NoConnection(
+                    java.net.UnknownHostException("api.o2.sk"),
+                )
+            coEvery { mockUseCase("test-code") } returns Result.failure(networkError)
+
+            viewModel.uiState.test {
+                awaitItem() // Idle
+
+                viewModel.activateCard("test-code")
+                awaitItem() // Loading
+
+                advanceUntilIdle()
+
+                val errorState = awaitItem() as ActivationUiState.Error
+                assertTrue(errorState.errorType is ErrorType.Network)
+                assertEquals("No internet connection", errorState.errorType.message)
+                assertFalse((errorState.errorType as ErrorType.Network).isTimeout)
+            }
+        }
+
+    @Test
+    fun `activateCard maps Timeout to Network error with timeout flag`() =
+        runTest(testDispatcher) {
+            val timeoutError =
+                DomainException.NetworkException.Timeout(
+                    java.net.SocketTimeoutException("timeout"),
+                )
+            coEvery { mockUseCase("test-code") } returns Result.failure(timeoutError)
+
+            viewModel.uiState.test {
+                awaitItem() // Idle
+
+                viewModel.activateCard("test-code")
+                awaitItem() // Loading
+
+                advanceUntilIdle()
+
+                val errorState = awaitItem() as ActivationUiState.Error
+                assertTrue(errorState.errorType is ErrorType.Network)
+                assertEquals("Request timed out", errorState.errorType.message)
+                assertTrue((errorState.errorType as ErrorType.Network).isTimeout)
+            }
+        }
+
+    @Test
+    fun `activateCard maps ServerError to Server error`() =
+        runTest(testDispatcher) {
+            val serverError =
+                DomainException.HttpException.ServerError(
+                    500,
+                    mockk(relaxed = true),
+                )
+            coEvery { mockUseCase("test-code") } returns Result.failure(serverError)
+
+            viewModel.uiState.test {
+                awaitItem() // Idle
+
+                viewModel.activateCard("test-code")
+                awaitItem() // Loading
+
+                advanceUntilIdle()
+
+                val errorState = awaitItem() as ActivationUiState.Error
+                assertTrue(errorState.errorType is ErrorType.Server)
+                assertEquals(500, (errorState.errorType as ErrorType.Server).statusCode)
+            }
+        }
+
+    @Test
+    fun `activateCard maps ParsingException to Parsing error`() =
+        runTest(testDispatcher) {
+            val parsingError =
+                DomainException.ParsingException(
+                    kotlinx.serialization.SerializationException("Invalid JSON"),
+                )
+            coEvery { mockUseCase("test-code") } returns Result.failure(parsingError)
+
+            viewModel.uiState.test {
+                awaitItem() // Idle
+
+                viewModel.activateCard("test-code")
+                awaitItem() // Loading
+
+                advanceUntilIdle()
+
+                val errorState = awaitItem() as ActivationUiState.Error
+                assertTrue(errorState.errorType is ErrorType.Parsing)
+            }
+        }
+
+    @Test
+    fun `clearError returns to Idle state`() =
+        runTest {
+            coEvery { mockUseCase("test-code") } returns
+                Result.failure(
+                    DomainException.ValidationException(277028),
+                )
 
             viewModel.activateCard("test-code")
-
-            assertEquals(ActivationUiState.Loading, awaitItem())
-
             advanceUntilIdle()
 
-            val finalState = awaitItem()
-            assertTrue(finalState is ActivationUiState.Success)
+            viewModel.uiState.test {
+                val errorState = awaitItem()
+                assertTrue(errorState is ActivationUiState.Error)
+
+                viewModel.clearError()
+
+                val idleState = awaitItem()
+                assertTrue(idleState is ActivationUiState.Idle)
+            }
         }
-    }
 
     @Test
-    fun `activateCard maps ValidationException to Validation error`() = runTest(testDispatcher) {
-        val validationError = DomainException.ValidationException(277028)
-        coEvery { mockUseCase("test-code") } returns Result.failure(validationError)
-
-        viewModel.uiState.test {
-            awaitItem() // Idle
+    fun `retryActivation clears error and retries`() =
+        runTest(testDispatcher) {
+            // First call fails
+            coEvery { mockUseCase("test-code") } returns
+                Result.failure(
+                    DomainException.NetworkException.Timeout(mockk()),
+                )
 
             viewModel.activateCard("test-code")
-            awaitItem() // Loading
-
             advanceUntilIdle()
 
-            val errorState = awaitItem() as ActivationUiState.Error
-            assertTrue(errorState.errorType is ErrorType.Validation)
-            assertEquals(277028, (errorState.errorType as ErrorType.Validation).androidVersion)
+            // Verify error state
+            assertTrue(viewModel.uiState.value is ActivationUiState.Error)
+
+            // Second call succeeds
+            coEvery { mockUseCase("test-code") } returns Result.success(true)
+
+            viewModel.uiState.test {
+                awaitItem() // Current error state
+
+                viewModel.retryActivation("test-code")
+
+                val idleState = awaitItem()
+                assertTrue(idleState is ActivationUiState.Idle)
+
+                val loadingState = awaitItem()
+                assertTrue(loadingState is ActivationUiState.Loading)
+
+                advanceUntilIdle()
+
+                val successState = awaitItem()
+                assertTrue(successState is ActivationUiState.Success)
+            }
         }
-    }
-
-    @Test
-    fun `activateCard maps NoConnection to Network error`() = runTest(testDispatcher) {
-        val networkError = DomainException.NetworkException.NoConnection(
-            java.net.UnknownHostException("api.o2.sk")
-        )
-        coEvery { mockUseCase("test-code") } returns Result.failure(networkError)
-
-        viewModel.uiState.test {
-            awaitItem() // Idle
-
-            viewModel.activateCard("test-code")
-            awaitItem() // Loading
-
-            advanceUntilIdle()
-
-            val errorState = awaitItem() as ActivationUiState.Error
-            assertTrue(errorState.errorType is ErrorType.Network)
-            assertEquals("No internet connection", errorState.errorType.message)
-            assertFalse((errorState.errorType as ErrorType.Network).isTimeout)
-        }
-    }
-
-    @Test
-    fun `activateCard maps Timeout to Network error with timeout flag`() = runTest(testDispatcher) {
-        val timeoutError = DomainException.NetworkException.Timeout(
-            java.net.SocketTimeoutException("timeout")
-        )
-        coEvery { mockUseCase("test-code") } returns Result.failure(timeoutError)
-
-        viewModel.uiState.test {
-            awaitItem() // Idle
-
-            viewModel.activateCard("test-code")
-            awaitItem() // Loading
-
-            advanceUntilIdle()
-
-            val errorState = awaitItem() as ActivationUiState.Error
-            assertTrue(errorState.errorType is ErrorType.Network)
-            assertEquals("Request timed out", errorState.errorType.message)
-            assertTrue((errorState.errorType as ErrorType.Network).isTimeout)
-        }
-    }
-
-    @Test
-    fun `activateCard maps ServerError to Server error`() = runTest(testDispatcher) {
-        val serverError = DomainException.HttpException.ServerError(
-            500,
-            mockk(relaxed = true)
-        )
-        coEvery { mockUseCase("test-code") } returns Result.failure(serverError)
-
-        viewModel.uiState.test {
-            awaitItem() // Idle
-
-            viewModel.activateCard("test-code")
-            awaitItem() // Loading
-
-            advanceUntilIdle()
-
-            val errorState = awaitItem() as ActivationUiState.Error
-            assertTrue(errorState.errorType is ErrorType.Server)
-            assertEquals(500, (errorState.errorType as ErrorType.Server).statusCode)
-        }
-    }
-
-    @Test
-    fun `activateCard maps ParsingException to Parsing error`() = runTest(testDispatcher) {
-        val parsingError = DomainException.ParsingException(
-            kotlinx.serialization.SerializationException("Invalid JSON")
-        )
-        coEvery { mockUseCase("test-code") } returns Result.failure(parsingError)
-
-        viewModel.uiState.test {
-            awaitItem() // Idle
-
-            viewModel.activateCard("test-code")
-            awaitItem() // Loading
-
-            advanceUntilIdle()
-
-            val errorState = awaitItem() as ActivationUiState.Error
-            assertTrue(errorState.errorType is ErrorType.Parsing)
-        }
-    }
-
-    @Test
-    fun `clearError returns to Idle state`() = runTest {
-        coEvery { mockUseCase("test-code") } returns Result.failure(
-            DomainException.ValidationException(277028)
-        )
-
-        viewModel.activateCard("test-code")
-        advanceUntilIdle()
-
-        viewModel.uiState.test {
-            val errorState = awaitItem()
-            assertTrue(errorState is ActivationUiState.Error)
-
-            viewModel.clearError()
-
-            val idleState = awaitItem()
-            assertTrue(idleState is ActivationUiState.Idle)
-        }
-    }
-
-    @Test
-    fun `retryActivation clears error and retries`() = runTest(testDispatcher) {
-        // First call fails
-        coEvery { mockUseCase("test-code") } returns Result.failure(
-            DomainException.NetworkException.Timeout(mockk())
-        )
-
-        viewModel.activateCard("test-code")
-        advanceUntilIdle()
-
-        // Verify error state
-        assertTrue(viewModel.uiState.value is ActivationUiState.Error)
-
-        // Second call succeeds
-        coEvery { mockUseCase("test-code") } returns Result.success(true)
-
-        viewModel.uiState.test {
-            awaitItem() // Current error state
-
-            viewModel.retryActivation("test-code")
-
-            val idleState = awaitItem()
-            assertTrue(idleState is ActivationUiState.Idle)
-
-            val loadingState = awaitItem()
-            assertTrue(loadingState is ActivationUiState.Loading)
-
-            advanceUntilIdle()
-
-            val successState = awaitItem()
-            assertTrue(successState is ActivationUiState.Success)
-        }
-    }
 
     @Test
     fun `error type titles are correct`() {

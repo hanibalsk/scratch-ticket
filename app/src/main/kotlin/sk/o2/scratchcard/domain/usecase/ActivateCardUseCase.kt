@@ -20,38 +20,37 @@ import javax.inject.Inject
  *
  * @property repository The scratch card repository for data operations
  */
-class ActivateCardUseCase @Inject constructor(
-    private val repository: ScratchCardRepository
-) {
-
-    /**
-     * Execute the card activation operation.
-     *
-     * Calls the O2 API with the provided code and validates the response.
-     * The operation continues even if the calling scope is cancelled.
-     *
-     * Usage:
-     * ```kotlin
-     * GlobalScope.launch(Dispatchers.IO) {
-     *     activateCardUseCase(code).onSuccess { isActivated ->
-     *         if (isActivated) {
-     *             // Card activated successfully
-     *         } else {
-     *             // Validation failed (android ≤ 277028)
-     *         }
-     *     }.onFailure { error ->
-     *         // Handle network/parsing error
-     *     }
-     * }
-     * ```
-     *
-     * @param code The UUID code to activate (obtained from scratch operation)
-     * @return Result containing:
-     *         - true if activation successful (android > 277028)
-     *         - false if validation failed (android ≤ 277028)
-     *         - exception for network, timeout, or parsing errors
-     */
-    suspend operator fun invoke(code: String): Result<Boolean> {
-        return repository.activateCard(code)
+class ActivateCardUseCase
+    @Inject
+    constructor(
+        private val repository: ScratchCardRepository,
+    ) {
+        /**
+         * Execute the card activation operation.
+         *
+         * Calls the O2 API with the provided code and validates the response.
+         * The operation continues even if the calling scope is cancelled.
+         *
+         * Usage:
+         * ```kotlin
+         * GlobalScope.launch(Dispatchers.IO) {
+         *     activateCardUseCase(code).onSuccess { isActivated ->
+         *         if (isActivated) {
+         *             // Card activated successfully
+         *         } else {
+         *             // Validation failed (android ≤ 277028)
+         *         }
+         *     }.onFailure { error ->
+         *         // Handle network/parsing error
+         *     }
+         * }
+         * ```
+         *
+         * @param code The UUID code to activate (obtained from scratch operation)
+         * @return Result containing:
+         *         - true if activation successful (android > 277028)
+         *         - false if validation failed (android ≤ 277028)
+         *         - exception for network, timeout, or parsing errors
+         */
+        suspend operator fun invoke(code: String): Result<Boolean> = repository.activateCard(code)
     }
-}

@@ -17,7 +17,6 @@ import sk.o2.scratchcard.domain.model.ScratchCardState
  * Android-specific concerns.
  */
 interface ScratchCardRepository {
-
     /**
      * Observable card state - emits current state and all subsequent changes.
      *

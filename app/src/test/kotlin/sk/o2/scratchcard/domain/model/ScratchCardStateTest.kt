@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
  * - Object singleton behavior
  */
 class ScratchCardStateTest {
-
     @Test
     fun `Unscratched is singleton object`() {
         val state1 = ScratchCardState.Unscratched
@@ -62,19 +61,21 @@ class ScratchCardStateTest {
 
     @Test
     fun `sealed class provides type safety with when expressions`() {
-        val states = listOf(
-            ScratchCardState.Unscratched,
-            ScratchCardState.Scratched("test-uuid"),
-            ScratchCardState.Activated("test-uuid")
-        )
+        val states =
+            listOf(
+                ScratchCardState.Unscratched,
+                ScratchCardState.Scratched("test-uuid"),
+                ScratchCardState.Activated("test-uuid"),
+            )
 
         states.forEach { state ->
             // When expression must be exhaustive for sealed class
-            val description = when (state) {
-                is ScratchCardState.Unscratched -> "Card is unscratched"
-                is ScratchCardState.Scratched -> "Card is scratched with code: ${state.code}"
-                is ScratchCardState.Activated -> "Card is activated with code: ${state.code}"
-            }
+            val description =
+                when (state) {
+                    is ScratchCardState.Unscratched -> "Card is unscratched"
+                    is ScratchCardState.Scratched -> "Card is scratched with code: ${state.code}"
+                    is ScratchCardState.Activated -> "Card is activated with code: ${state.code}"
+                }
 
             assertNotNull(description)
         }

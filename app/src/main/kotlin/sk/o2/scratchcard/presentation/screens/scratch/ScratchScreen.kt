@@ -44,7 +44,7 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 fun ScratchScreen(
     onNavigateBack: () -> Unit,
     viewModel: ScratchViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val cardState by viewModel.cardState.collectAsState()
     val isScratching by viewModel.isScratching.collectAsState()
@@ -58,11 +58,12 @@ fun ScratchScreen(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(O2Spacing.xl),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(O2Spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         when {
             // Show loading with progress during scratch
@@ -74,7 +75,7 @@ fun ScratchScreen(
                 Text(
                     text = "Scratching... ${(scratchProgress * 100).toInt()}%",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
 
@@ -84,7 +85,7 @@ fun ScratchScreen(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Scratch complete",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier.size(64.dp),
                 )
 
                 Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -92,7 +93,7 @@ fun ScratchScreen(
                 Text(
                     text = "Code Revealed!",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 Spacer(modifier = Modifier.height(O2Spacing.lg))
@@ -102,7 +103,7 @@ fun ScratchScreen(
                         text = (cardState as ScratchCardState.Scratched).code,
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
 
@@ -111,7 +112,7 @@ fun ScratchScreen(
                 O2PrimaryButton(
                     text = "Back to Main",
                     onClick = onNavigateBack,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -120,12 +121,12 @@ fun ScratchScreen(
                 O2Card {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(O2Spacing.lg)
+                        modifier = Modifier.padding(O2Spacing.lg),
                     ) {
                         Text(
                             text = "Scratch Your Card",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
 
                         Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -134,7 +135,7 @@ fun ScratchScreen(
                             text = "Tap the button below to reveal your unique code",
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -145,7 +146,7 @@ fun ScratchScreen(
                     text = "Scratch Card",
                     onClick = { viewModel.startScratch() },
                     enabled = !isScratching,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 // Show error message if scratch failed
@@ -154,7 +155,7 @@ fun ScratchScreen(
                     Text(
                         text = error,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
             }

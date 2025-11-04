@@ -35,7 +35,7 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 @Composable
 fun O2LoadingIndicator(
     progress: Float? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (progress != null) {
         // Determinate progress (e.g., 2-second scratch countdown)
@@ -44,7 +44,7 @@ fun O2LoadingIndicator(
             modifier = modifier.size(48.dp),
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = 4.dp,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
     } else {
         // Indeterminate progress (e.g., API calls)
@@ -52,7 +52,7 @@ fun O2LoadingIndicator(
             modifier = modifier.size(48.dp),
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = 4.dp,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
     }
 }
@@ -68,7 +68,7 @@ fun O2LoadingIndicatorIndeterminateLightPreview() {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text("Indeterminate (API Call)")
             O2LoadingIndicator()
@@ -83,7 +83,7 @@ fun O2LoadingIndicatorIndeterminateDarkPreview() {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text("Indeterminate (API Call)")
             O2LoadingIndicator()
@@ -98,7 +98,7 @@ fun O2LoadingIndicatorDeterminateLightPreview() {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text("Determinate (Scratch Progress)")
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -119,7 +119,7 @@ fun O2LoadingIndicatorDeterminateDarkPreview() {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text("Determinate (Scratch Progress)")
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {

@@ -1,8 +1,6 @@
 package sk.o2.scratchcard.util
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 
 /**
@@ -18,7 +16,8 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
  */
 fun SemanticsNodeInteraction.performBack(): SemanticsNodeInteraction {
     // Use Espresso's pressBack() to simulate back button
-    androidx.test.espresso.Espresso.pressBack()
+    androidx.test.espresso.Espresso
+        .pressBack()
     return this
 }
 
@@ -32,6 +31,7 @@ fun SemanticsNodeInteraction.performBack(): SemanticsNodeInteraction {
  */
 fun ComposeContentTestRule.performBack() {
     waitForIdle()
-    androidx.test.espresso.Espresso.pressBack()
+    androidx.test.espresso.Espresso
+        .pressBack()
     waitForIdle()
 }

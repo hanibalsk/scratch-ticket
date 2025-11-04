@@ -37,7 +37,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
-
     /**
      * Provides configured Ktor HttpClient.
      *
@@ -51,34 +50,38 @@ object DataModule {
      */
     @Provides
     @Singleton
-    fun provideHttpClient(): HttpClient = HttpClient(Android) {
-        // Content Negotiation with kotlinx.serialization
-        install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                isLenient = true
-                prettyPrint = false
-                encodeDefaults = true
-            })
-        }
-
-        // Timeout configuration (NFR002: 10-second timeout)
-        install(HttpTimeout) {
-            requestTimeoutMillis = 10_000
-            connectTimeoutMillis = 10_000
-            socketTimeoutMillis = 10_000
-        }
-
-        // Logging (debug builds only)
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Timber.d("Ktor: $message")
-                }
+    fun provideHttpClient(): HttpClient =
+        HttpClient(Android) {
+            // Content Negotiation with kotlinx.serialization
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                        prettyPrint = false
+                        encodeDefaults = true
+                    },
+                )
             }
-            level = LogLevel.INFO
+
+            // Timeout configuration (NFR002: 10-second timeout)
+            install(HttpTimeout) {
+                requestTimeoutMillis = 10_000
+                connectTimeoutMillis = 10_000
+                socketTimeoutMillis = 10_000
+            }
+
+            // Logging (debug builds only)
+            install(Logging) {
+                logger =
+                    object : Logger {
+                        override fun log(message: String) {
+                            Timber.d("Ktor: $message")
+                        }
+                    }
+                level = LogLevel.INFO
+            }
         }
-    }
 
     /**
      * Provides O2ApiService instance.
@@ -88,8 +91,7 @@ object DataModule {
      */
     @Provides
     @Singleton
-    fun provideO2ApiService(httpClient: HttpClient): O2ApiService =
-        O2ApiService(httpClient)
+    fun provideO2ApiService(httpClient: HttpClient): O2ApiService = O2ApiService(httpClient)
 
     /**
      * Provides IO CoroutineDispatcher for background operations.
@@ -113,7 +115,6 @@ object DataModule {
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataBindingsModule {
-
     /**
      * Binds ScratchCardRepository interface to its implementation.
      *
@@ -125,9 +126,7 @@ interface DataBindingsModule {
      */
     @Binds
     @Singleton
-    fun bindScratchCardRepository(
-        impl: ScratchCardRepositoryImpl
-    ): ScratchCardRepository
+    fun bindScratchCardRepository(impl: ScratchCardRepositoryImpl): ScratchCardRepository
 }
 
 /**

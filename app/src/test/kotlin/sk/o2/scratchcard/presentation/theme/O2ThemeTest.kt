@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
  * - Light and dark color schemes are properly configured
  */
 class O2ThemeTest {
-
     // ═══════════════════════════════════════════════════════════
     // Color Palette Tests
     // ═══════════════════════════════════════════════════════════
@@ -155,11 +154,11 @@ class O2ThemeTest {
 
     @Test
     fun `O2Spacing follows 8dp base grid system`() {
-        assertEquals(4.dp, O2Spacing.xs)   // Sub-grid
-        assertEquals(8.dp, O2Spacing.sm)   // Base grid
-        assertEquals(16.dp, O2Spacing.md)  // 2x base
-        assertEquals(24.dp, O2Spacing.lg)  // 3x base
-        assertEquals(32.dp, O2Spacing.xl)  // 4x base
+        assertEquals(4.dp, O2Spacing.xs) // Sub-grid
+        assertEquals(8.dp, O2Spacing.sm) // Base grid
+        assertEquals(16.dp, O2Spacing.md) // 2x base
+        assertEquals(24.dp, O2Spacing.lg) // 3x base
+        assertEquals(32.dp, O2Spacing.xl) // 4x base
     }
 
     @Test
@@ -171,15 +170,16 @@ class O2ThemeTest {
     @Test
     fun `O2Spacing increments are multiples of 4dp`() {
         // Verify spacing follows 4dp sub-grid increments
-        val spacings = listOf(
-            O2Spacing.xs,   // 4dp
-            O2Spacing.sm,   // 8dp
-            O2Spacing.md,   // 16dp
-            O2Spacing.lg,   // 24dp
-            O2Spacing.xl,   // 32dp
-            O2Spacing.xxl,  // 40dp
-            O2Spacing.xxxl  // 48dp
-        )
+        val spacings =
+            listOf(
+                O2Spacing.xs, // 4dp
+                O2Spacing.sm, // 8dp
+                O2Spacing.md, // 16dp
+                O2Spacing.lg, // 24dp
+                O2Spacing.xl, // 32dp
+                O2Spacing.xxl, // 40dp
+                O2Spacing.xxxl, // 48dp
+            )
 
         spacings.forEach { spacing ->
             assertEquals(0, spacing.value.toInt() % 4, "Spacing $spacing is not a multiple of 4dp")

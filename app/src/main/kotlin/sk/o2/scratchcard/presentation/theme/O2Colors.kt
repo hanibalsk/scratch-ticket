@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
  * Reference: docs/o2-design-system.md
  */
 object O2Colors {
-
     // ═══════════════════════════════════════════════════════════
     // Brand Primary Colors
     // ═══════════════════════════════════════════════════════════
@@ -114,38 +113,32 @@ object O2Colors {
  * - OnSurface: Dark text on light backgrounds
  * - Error: O2 Error Red for validation failures
  */
-val LightColorScheme = lightColorScheme(
-    primary = O2Colors.BluePrimary,
-    onPrimary = O2Colors.White,
-    primaryContainer = O2Colors.Sky05,
-    onPrimaryContainer = O2Colors.BlueDeep,
-
-    secondary = O2Colors.BlueDeep,
-    onSecondary = O2Colors.White,
-
-    tertiary = O2Colors.Navy,
-    onTertiary = O2Colors.White,
-
-    background = O2Colors.White,
-    onBackground = O2Colors.Neutral1000,
-
-    surface = O2Colors.White,
-    onSurface = O2Colors.Neutral1000,
-    surfaceVariant = O2Colors.Neutral050,
-    onSurfaceVariant = O2Colors.Neutral700,
-
-    outline = O2Colors.Neutral200,
-    outlineVariant = O2Colors.Neutral100,
-
-    error = O2Colors.Error,
-    onError = O2Colors.White,
-    errorContainer = Color(0xFFFFDAD6),
-    onErrorContainer = Color(0xFF410002),
-
-    // Semantic color mappings
-    // Success: Use custom O2Colors.Success
-    // Warning: Use custom O2Colors.Warning
-)
+val LightColorScheme =
+    lightColorScheme(
+        primary = O2Colors.BluePrimary,
+        onPrimary = O2Colors.White,
+        primaryContainer = O2Colors.Sky05,
+        onPrimaryContainer = O2Colors.BlueDeep,
+        secondary = O2Colors.BlueDeep,
+        onSecondary = O2Colors.White,
+        tertiary = O2Colors.Navy,
+        onTertiary = O2Colors.White,
+        background = O2Colors.White,
+        onBackground = O2Colors.Neutral1000,
+        surface = O2Colors.White,
+        onSurface = O2Colors.Neutral1000,
+        surfaceVariant = O2Colors.Neutral050,
+        onSurfaceVariant = O2Colors.Neutral700,
+        outline = O2Colors.Neutral200,
+        outlineVariant = O2Colors.Neutral100,
+        error = O2Colors.Error,
+        onError = O2Colors.White,
+        errorContainer = Color(0xFFFFDAD6),
+        onErrorContainer = Color(0xFF410002),
+        // Semantic color mappings
+        // Success: Use custom O2Colors.Success
+        // Warning: Use custom O2Colors.Warning
+    )
 
 /**
  * Dark color scheme following O2 design system.
@@ -156,31 +149,26 @@ val LightColorScheme = lightColorScheme(
  * - OnSurface: Light text (#ECEFF4)
  * - Borders: Increased contrast
  */
-val DarkColorScheme = darkColorScheme(
-    primary = O2Colors.BluePrimary,
-    onPrimary = O2Colors.White,
-    primaryContainer = O2Colors.BlueDeep,
-    onPrimaryContainer = Color(0xFFB8C7FF),
-
-    secondary = O2Colors.BlueDeep,
-    onSecondary = O2Colors.White,
-
-    tertiary = O2Colors.Navy,
-    onTertiary = O2Colors.White,
-
-    background = O2Colors.Neutral1000,
-    onBackground = Color(0xFFECEFF4),
-
-    surface = O2Colors.Neutral1000,
-    onSurface = Color(0xFFECEFF4),
-    surfaceVariant = O2Colors.Neutral900,
-    onSurfaceVariant = O2Colors.Neutral300,
-
-    outline = O2Colors.Neutral700,
-    outlineVariant = O2Colors.Neutral800,
-
-    error = O2Colors.Error,
-    onError = O2Colors.White,
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
-)
+val DarkColorScheme =
+    darkColorScheme(
+        primary = O2Colors.BluePrimary,
+        onPrimary = O2Colors.White,
+        primaryContainer = O2Colors.BlueDeep,
+        onPrimaryContainer = Color(0xFFB8C7FF),
+        secondary = O2Colors.BlueDeep,
+        onSecondary = O2Colors.White,
+        tertiary = O2Colors.Navy,
+        onTertiary = O2Colors.White,
+        background = O2Colors.Neutral1000,
+        onBackground = Color(0xFFECEFF4),
+        surface = O2Colors.Neutral1000,
+        onSurface = Color(0xFFECEFF4),
+        surfaceVariant = O2Colors.Neutral900,
+        onSurfaceVariant = O2Colors.Neutral300,
+        outline = O2Colors.Neutral700,
+        outlineVariant = O2Colors.Neutral800,
+        error = O2Colors.Error,
+        onError = O2Colors.White,
+        errorContainer = Color(0xFF93000A),
+        onErrorContainer = Color(0xFFFFDAD6),
+    )

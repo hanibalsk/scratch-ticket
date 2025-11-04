@@ -7,12 +7,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.presentation.theme.O2Colors
-import sk.o2.scratchcard.presentation.theme.O2Shapes
 import sk.o2.scratchcard.presentation.theme.O2Theme
 
 /**
@@ -40,26 +38,27 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 @Composable
 fun O2StateBadge(
     state: ScratchCardState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val (text, color) = when (state) {
-        is ScratchCardState.Unscratched -> "Unscratched" to O2Colors.Neutral600
-        is ScratchCardState.Scratched -> "Scratched" to MaterialTheme.colorScheme.primary
-        is ScratchCardState.Activated -> "Activated" to O2Colors.Success
-    }
+    val (text, color) =
+        when (state) {
+            is ScratchCardState.Unscratched -> "Unscratched" to O2Colors.Neutral600
+            is ScratchCardState.Scratched -> "Scratched" to MaterialTheme.colorScheme.primary
+            is ScratchCardState.Activated -> "Activated" to O2Colors.Success
+        }
 
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.small, // 12dp radius
         color = color.copy(alpha = 0.1f),
         border = BorderStroke(1.dp, color),
-        contentColor = color
+        contentColor = color,
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             style = MaterialTheme.typography.labelLarge,
-            color = color
+            color = color,
         )
     }
 }
@@ -79,22 +78,23 @@ fun O2StateBadge(
 @Composable
 fun O2Chip(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
-        color = if (MaterialTheme.colorScheme.surface == O2Colors.White) {
-            O2Colors.Sky05 // Light mode
-        } else {
-            O2Colors.BlueDeep.copy(alpha = 0.2f) // Dark mode
-        },
-        contentColor = O2Colors.BlueDeep
+        color =
+            if (MaterialTheme.colorScheme.surface == O2Colors.White) {
+                O2Colors.Sky05 // Light mode
+            } else {
+                O2Colors.BlueDeep.copy(alpha = 0.2f) // Dark mode
+            },
+        contentColor = O2Colors.BlueDeep,
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 }
@@ -109,7 +109,9 @@ fun O2StateBadgeAllStatesLightPreview() {
     O2Theme(darkTheme = false) {
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement =
+                androidx.compose.foundation.layout.Arrangement
+                    .spacedBy(8.dp),
         ) {
             O2StateBadge(state = ScratchCardState.Unscratched)
             O2StateBadge(state = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"))
@@ -124,7 +126,9 @@ fun O2StateBadgeAllStatesDarkPreview() {
     O2Theme(darkTheme = true) {
         androidx.compose.foundation.layout.Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            verticalArrangement =
+                androidx.compose.foundation.layout.Arrangement
+                    .spacedBy(8.dp),
         ) {
             O2StateBadge(state = ScratchCardState.Unscratched)
             O2StateBadge(state = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"))
@@ -139,7 +143,9 @@ fun O2ChipLightPreview() {
     O2Theme(darkTheme = false) {
         androidx.compose.foundation.layout.Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            horizontalArrangement =
+                androidx.compose.foundation.layout.Arrangement
+                    .spacedBy(8.dp),
         ) {
             O2Chip(text = "Tag 1")
             O2Chip(text = "Tag 2")
@@ -153,7 +159,9 @@ fun O2ChipDarkPreview() {
     O2Theme(darkTheme = true) {
         androidx.compose.foundation.layout.Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            horizontalArrangement =
+                androidx.compose.foundation.layout.Arrangement
+                    .spacedBy(8.dp),
         ) {
             O2Chip(text = "Tag 1")
             O2Chip(text = "Tag 2")

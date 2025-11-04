@@ -6,13 +6,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import sk.o2.scratchcard.presentation.theme.O2Colors
-import sk.o2.scratchcard.presentation.theme.O2Spacing
 import sk.o2.scratchcard.presentation.theme.O2Theme
 
 /**
@@ -42,7 +40,7 @@ fun O2ErrorDialog(
     message: String,
     onRetry: (() -> Unit)? = null,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -52,7 +50,7 @@ fun O2ErrorDialog(
                 imageVector = Icons.Default.Warning,
                 contentDescription = null,
                 tint = O2Colors.Error,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
         },
         title = {
@@ -61,7 +59,7 @@ fun O2ErrorDialog(
                 style = MaterialTheme.typography.headlineMedium,
                 color = O2Colors.Error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         },
         text = {
@@ -69,7 +67,7 @@ fun O2ErrorDialog(
                 text = message,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         },
         confirmButton = {
@@ -79,7 +77,7 @@ fun O2ErrorDialog(
                     onClick = {
                         onRetry()
                         onDismiss()
-                    }
+                    },
                 )
             }
         },
@@ -90,19 +88,19 @@ fun O2ErrorDialog(
                     Text(
                         text = "Dismiss",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
             } else {
                 // Show "OK" if no retry available
                 O2PrimaryButton(
                     text = "OK",
-                    onClick = onDismiss
+                    onClick = onDismiss,
                 )
             }
         },
         containerColor = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(24.dp) // Large shape for dialogs
+        shape = RoundedCornerShape(24.dp), // Large shape for dialogs
     )
 }
 
@@ -118,7 +116,7 @@ fun O2ErrorDialogValidationPreview() {
             title = "Activation Failed",
             message = "This scratch card could not be activated. Please try again or contact support.",
             onRetry = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -131,7 +129,7 @@ fun O2ErrorDialogNetworkPreview() {
             title = "Connection Error",
             message = "No internet connection",
             onRetry = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -144,7 +142,7 @@ fun O2ErrorDialogServerPreview() {
             title = "Service Error",
             message = "Service temporarily unavailable. Please try again later.",
             onRetry = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -157,7 +155,7 @@ fun O2ErrorDialogDarkPreview() {
             title = "Connection Error",
             message = "Request timed out",
             onRetry = {},
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }
@@ -170,7 +168,7 @@ fun O2ErrorDialogNoRetryPreview() {
             title = "Error",
             message = "An unexpected error occurred.",
             onRetry = null, // No retry option
-            onDismiss = {}
+            onDismiss = {},
         )
     }
 }

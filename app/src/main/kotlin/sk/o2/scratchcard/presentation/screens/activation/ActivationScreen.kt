@@ -49,7 +49,7 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 fun ActivationScreen(
     onNavigateBack: () -> Unit,
     viewModel: ActivationViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cardState by viewModel.cardState.collectAsStateWithLifecycle()
@@ -61,19 +61,23 @@ fun ActivationScreen(
         O2ErrorDialog(
             title = errorType.getTitle(),
             message = errorType.message,
-            onRetry = if (cardState is ScratchCardState.Scratched) {
-                { viewModel.retryActivation((cardState as ScratchCardState.Scratched).code) }
-            } else null,
-            onDismiss = { viewModel.clearError() }
+            onRetry =
+                if (cardState is ScratchCardState.Scratched) {
+                    { viewModel.retryActivation((cardState as ScratchCardState.Scratched).code) }
+                } else {
+                    null
+                },
+            onDismiss = { viewModel.clearError() },
         )
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(O2Spacing.xl),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(O2Spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         when (uiState) {
             is ActivationUiState.Success -> {
@@ -82,7 +86,7 @@ fun ActivationScreen(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = stringResource(R.string.msg_activation_success),
                     tint = O2Colors.Success,
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(80.dp),
                 )
 
                 Spacer(modifier = Modifier.height(O2Spacing.lg))
@@ -91,7 +95,7 @@ fun ActivationScreen(
                     text = stringResource(R.string.msg_activation_success),
                     style = MaterialTheme.typography.headlineMedium,
                     color = O2Colors.Success,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -102,14 +106,14 @@ fun ActivationScreen(
                             Text(
                                 text = "Code Activated",
                                 style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                             Spacer(modifier = Modifier.height(O2Spacing.sm))
                             Text(
                                 text = (cardState as ScratchCardState.Activated).code,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                         }
                     }
@@ -120,7 +124,7 @@ fun ActivationScreen(
                 O2PrimaryButton(
                     text = "Back to Main",
                     onClick = onNavigateBack,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -133,7 +137,7 @@ fun ActivationScreen(
                 Text(
                     text = "Activating...",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Spacer(modifier = Modifier.height(O2Spacing.sm))
@@ -141,7 +145,7 @@ fun ActivationScreen(
                 Text(
                     text = "Please wait",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 
@@ -154,7 +158,7 @@ fun ActivationScreen(
                                 Text(
                                     text = "Activate Your Card",
                                     style = MaterialTheme.typography.headlineMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                    color = MaterialTheme.colorScheme.onSurface,
                                 )
 
                                 Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -162,7 +166,7 @@ fun ActivationScreen(
                                 Text(
                                     text = "Your scratch code:",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
 
                                 Spacer(modifier = Modifier.height(O2Spacing.sm))
@@ -171,7 +175,7 @@ fun ActivationScreen(
                                     text = state.code,
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.primary,
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.Center,
                                 )
 
                                 Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -180,7 +184,7 @@ fun ActivationScreen(
                                     text = "Tap the button below to activate",
                                     style = MaterialTheme.typography.bodyMedium,
                                     textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
@@ -190,7 +194,7 @@ fun ActivationScreen(
                         O2PrimaryButton(
                             text = stringResource(R.string.btn_activate),
                             onClick = { viewModel.activateCard(state.code) },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
 
@@ -200,7 +204,7 @@ fun ActivationScreen(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = "Already activated",
                             tint = O2Colors.Success,
-                            modifier = Modifier.size(64.dp)
+                            modifier = Modifier.size(64.dp),
                         )
 
                         Spacer(modifier = Modifier.height(O2Spacing.md))
@@ -208,7 +212,7 @@ fun ActivationScreen(
                         Text(
                             text = "Card Already Activated",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = O2Colors.Success
+                            color = O2Colors.Success,
                         )
 
                         Spacer(modifier = Modifier.height(O2Spacing.xl))
@@ -216,7 +220,7 @@ fun ActivationScreen(
                         O2PrimaryButton(
                             text = "Back to Main",
                             onClick = onNavigateBack,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
 
@@ -225,14 +229,14 @@ fun ActivationScreen(
                         Text(
                             text = "No scratch code available",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colorScheme.error,
                         )
 
                         Spacer(modifier = Modifier.height(O2Spacing.lg))
 
                         O2PrimaryButton(
                             text = "Back to Main",
-                            onClick = onNavigateBack
+                            onClick = onNavigateBack,
                         )
                     }
                 }
@@ -248,4 +252,3 @@ fun ActivationScreenIdlePreview() {
         ActivationScreen(onNavigateBack = {})
     }
 }
-

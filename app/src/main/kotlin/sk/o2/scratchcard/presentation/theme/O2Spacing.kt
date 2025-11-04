@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
  * Reference: docs/o2-design-system.md#spacing-scale
  */
 object O2Spacing {
-
     /**
      * Extra Small - 4dp.
      * Use for: Tight spacing within components, fine alignment.

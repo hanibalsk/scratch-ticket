@@ -38,7 +38,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Main.route
+        startDestination = Screen.Main.route,
     ) {
         // Main Screen - App entry point
         composable(route = Screen.Main.route) {
@@ -48,7 +48,7 @@ fun AppNavigation() {
                 },
                 onNavigateToActivation = {
                     navController.navigate(Screen.Activation.route)
-                }
+                },
             )
         }
 
@@ -57,7 +57,7 @@ fun AppNavigation() {
             ScratchScreen(
                 onNavigateBack = {
                     navController.popBackStack()
-                }
+                },
             )
         }
 
@@ -66,7 +66,7 @@ fun AppNavigation() {
             ActivationScreen(
                 onNavigateBack = {
                     navController.popBackStack()
-                }
+                },
             )
         }
     }

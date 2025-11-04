@@ -16,7 +16,6 @@ import sk.o2.scratchcard.domain.model.ScratchCardState
  * - Loading indicator mode switching
  */
 class O2ComponentsTest {
-
     @Test
     fun `O2StateBadge maps Unscratched to correct text`() {
         // This test validates the mapping logic

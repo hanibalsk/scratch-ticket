@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import sk.o2.scratchcard.presentation.theme.O2Colors
-import sk.o2.scratchcard.presentation.theme.O2Shapes
 import sk.o2.scratchcard.presentation.theme.O2Theme
 
 /**
@@ -38,28 +37,30 @@ fun O2PrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier.heightIn(min = 48.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary, // O2 Blue
-            contentColor = O2Colors.White,
-            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-            disabledContentColor = O2Colors.White.copy(alpha = 0.38f)
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary, // O2 Blue
+                contentColor = O2Colors.White,
+                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                disabledContentColor = O2Colors.White.copy(alpha = 0.38f),
+            ),
         shape = MaterialTheme.shapes.small, // 12dp radius
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 1.dp,
-            pressedElevation = 3.dp,
-            disabledElevation = 0.dp
-        )
+        elevation =
+            ButtonDefaults.buttonElevation(
+                defaultElevation = 1.dp,
+                pressedElevation = 3.dp,
+                disabledElevation = 0.dp,
+            ),
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
@@ -89,26 +90,28 @@ fun O2SecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier.heightIn(min = 48.dp),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-        ),
-        border = ButtonDefaults.outlinedButtonBorder(enabled = enabled).copy(
-            width = 1.dp
-        ),
-        shape = MaterialTheme.shapes.small // 12dp radius
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            ),
+        border =
+            ButtonDefaults.outlinedButtonBorder(enabled = enabled).copy(
+                width = 1.dp,
+            ),
+        shape = MaterialTheme.shapes.small, // 12dp radius
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
     }
 }
@@ -123,7 +126,7 @@ fun O2PrimaryButtonLightPreview() {
     O2Theme(darkTheme = false) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2PrimaryButton(text = "Scratch Card", onClick = {})
             O2PrimaryButton(text = "Activate", onClick = {})
@@ -138,7 +141,7 @@ fun O2PrimaryButtonDarkPreview() {
     O2Theme(darkTheme = true) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2PrimaryButton(text = "Scratch Card", onClick = {})
             O2PrimaryButton(text = "Activate", onClick = {})
@@ -153,7 +156,7 @@ fun O2SecondaryButtonLightPreview() {
     O2Theme(darkTheme = false) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2SecondaryButton(text = "Retry", onClick = {})
             O2SecondaryButton(text = "Dismiss", onClick = {})
@@ -168,7 +171,7 @@ fun O2SecondaryButtonDarkPreview() {
     O2Theme(darkTheme = true) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2SecondaryButton(text = "Retry", onClick = {})
             O2SecondaryButton(text = "Dismiss", onClick = {})
