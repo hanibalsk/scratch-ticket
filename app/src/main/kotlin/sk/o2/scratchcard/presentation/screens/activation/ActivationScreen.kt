@@ -18,7 +18,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
+import sk.o2.scratchcard.presentation.components.O2BrandedBackground
 import sk.o2.scratchcard.presentation.components.O2Card
+import sk.o2.scratchcard.presentation.components.O2ContentCard
 import sk.o2.scratchcard.presentation.components.O2ErrorDialog
 import sk.o2.scratchcard.presentation.components.O2LoadingIndicator
 import sk.o2.scratchcard.presentation.components.O2PrimaryButton
@@ -71,173 +73,179 @@ fun ActivationScreen(
         )
     }
 
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(O2Spacing.xl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        when (uiState) {
-            is ActivationUiState.Success -> {
-                // Success feedback (Story 1.6)
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = stringResource(R.string.msg_activation_success),
-                    tint = O2Colors.Success,
-                    modifier = Modifier.size(80.dp),
-                )
-
-                Spacer(modifier = Modifier.height(O2Spacing.lg))
-
-                Text(
-                    text = stringResource(R.string.msg_activation_success),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = O2Colors.Success,
-                    textAlign = TextAlign.Center,
-                )
-
-                Spacer(modifier = Modifier.height(O2Spacing.md))
-
-                if (cardState is ScratchCardState.Activated) {
-                    O2Card {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.msg_code_activated),
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
+    O2BrandedBackground(modifier = modifier) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            O2ContentCard {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(O2Spacing.md),
+                ) {
+                    when (uiState) {
+                        is ActivationUiState.Success -> {
+                            // Success feedback (Story 1.6)
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = stringResource(R.string.msg_activation_success),
+                                tint = O2Colors.Success,
+                                modifier = Modifier.size(80.dp),
                             )
-                            Spacer(modifier = Modifier.height(O2Spacing.sm))
+
+                            Spacer(modifier = Modifier.height(O2Spacing.lg))
+
                             Text(
-                                text = (cardState as ScratchCardState.Activated).code,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                text = stringResource(R.string.msg_activation_success),
+                                style = MaterialTheme.typography.headlineMedium,
+                                color = O2Colors.Success,
                                 textAlign = TextAlign.Center,
                             )
+
+                            Spacer(modifier = Modifier.height(O2Spacing.md))
+
+                            if (cardState is ScratchCardState.Activated) {
+                                O2Card {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = stringResource(R.string.msg_code_activated),
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                        )
+                                        Spacer(modifier = Modifier.height(O2Spacing.sm))
+                                        Text(
+                                            text = (cardState as ScratchCardState.Activated).code,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            textAlign = TextAlign.Center,
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(O2Spacing.xl))
+
+                            O2PrimaryButton(
+                                text = stringResource(R.string.btn_back_to_main),
+                                onClick = onNavigateBack,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
                         }
-                    }
-                }
 
-                Spacer(modifier = Modifier.height(O2Spacing.xl))
+                        is ActivationUiState.Loading -> {
+                            // Loading state during API call
+                            O2LoadingIndicator() // Indeterminate for API call
 
-                O2PrimaryButton(
-                    text = stringResource(R.string.btn_back_to_main),
-                    onClick = onNavigateBack,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+                            Spacer(modifier = Modifier.height(O2Spacing.md))
 
-            is ActivationUiState.Loading -> {
-                // Loading state during API call
-                O2LoadingIndicator() // Indeterminate for API call
+                            Text(
+                                text = stringResource(R.string.msg_activating),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
 
-                Spacer(modifier = Modifier.height(O2Spacing.md))
+                            Spacer(modifier = Modifier.height(O2Spacing.sm))
 
-                Text(
-                    text = stringResource(R.string.msg_activating),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+                            Text(
+                                text = stringResource(R.string.msg_please_wait),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
 
-                Spacer(modifier = Modifier.height(O2Spacing.sm))
+                        is ActivationUiState.Idle, is ActivationUiState.Error -> {
+                            // Show activation UI if card is Scratched
+                            when (val state = cardState) {
+                                is ScratchCardState.Scratched -> {
+                                    O2Card {
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text(
+                                                text = stringResource(R.string.msg_activate_your_card),
+                                                style = MaterialTheme.typography.headlineMedium,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                            )
 
-                Text(
-                    text = stringResource(R.string.msg_please_wait),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+                                            Spacer(modifier = Modifier.height(O2Spacing.md))
 
-            is ActivationUiState.Idle, is ActivationUiState.Error -> {
-                // Show activation UI if card is Scratched
-                when (val state = cardState) {
-                    is ScratchCardState.Scratched -> {
-                        O2Card {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = stringResource(R.string.msg_activate_your_card),
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
+                                            Text(
+                                                text = stringResource(R.string.msg_your_scratch_code),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
 
-                                Spacer(modifier = Modifier.height(O2Spacing.md))
+                                            Spacer(modifier = Modifier.height(O2Spacing.sm))
 
-                                Text(
-                                    text = stringResource(R.string.msg_your_scratch_code),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
+                                            Text(
+                                                text = state.code,
+                                                style = MaterialTheme.typography.titleLarge,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                textAlign = TextAlign.Center,
+                                            )
 
-                                Spacer(modifier = Modifier.height(O2Spacing.sm))
+                                            Spacer(modifier = Modifier.height(O2Spacing.md))
 
-                                Text(
-                                    text = state.code,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    textAlign = TextAlign.Center,
-                                )
+                                            Text(
+                                                text = stringResource(R.string.msg_tap_to_activate),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                textAlign = TextAlign.Center,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            )
+                                        }
+                                    }
 
-                                Spacer(modifier = Modifier.height(O2Spacing.md))
+                                    Spacer(modifier = Modifier.height(O2Spacing.xl))
 
-                                Text(
-                                    text = stringResource(R.string.msg_tap_to_activate),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    textAlign = TextAlign.Center,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
+                                    O2PrimaryButton(
+                                        text = stringResource(R.string.btn_activate),
+                                        onClick = { viewModel.activateCard(state.code) },
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
+
+                                is ScratchCardState.Activated -> {
+                                    // Already activated - show message
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = stringResource(R.string.cd_already_activated),
+                                        tint = O2Colors.Success,
+                                        modifier = Modifier.size(64.dp),
+                                    )
+
+                                    Spacer(modifier = Modifier.height(O2Spacing.md))
+
+                                    Text(
+                                        text = stringResource(R.string.msg_card_already_activated),
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        color = O2Colors.Success,
+                                    )
+
+                                    Spacer(modifier = Modifier.height(O2Spacing.xl))
+
+                                    O2PrimaryButton(
+                                        text = stringResource(R.string.btn_back_to_main),
+                                        onClick = onNavigateBack,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
+
+                                is ScratchCardState.Unscratched -> {
+                                    // No code to activate - should not reach here via navigation
+                                    Text(
+                                        text = stringResource(R.string.msg_no_scratch_code),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.error,
+                                    )
+
+                                    Spacer(modifier = Modifier.height(O2Spacing.lg))
+
+                                    O2PrimaryButton(
+                                        text = stringResource(R.string.btn_back_to_main),
+                                        onClick = onNavigateBack,
+                                    )
+                                }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(O2Spacing.xl))
-
-                        O2PrimaryButton(
-                            text = stringResource(R.string.btn_activate),
-                            onClick = { viewModel.activateCard(state.code) },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-
-                    is ScratchCardState.Activated -> {
-                        // Already activated - show message
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = stringResource(R.string.cd_already_activated),
-                            tint = O2Colors.Success,
-                            modifier = Modifier.size(64.dp),
-                        )
-
-                        Spacer(modifier = Modifier.height(O2Spacing.md))
-
-                        Text(
-                            text = stringResource(R.string.msg_card_already_activated),
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = O2Colors.Success,
-                        )
-
-                        Spacer(modifier = Modifier.height(O2Spacing.xl))
-
-                        O2PrimaryButton(
-                            text = stringResource(R.string.btn_back_to_main),
-                            onClick = onNavigateBack,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-
-                    is ScratchCardState.Unscratched -> {
-                        // No code to activate - should not reach here via navigation
-                        Text(
-                            text = stringResource(R.string.msg_no_scratch_code),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error,
-                        )
-
-                        Spacer(modifier = Modifier.height(O2Spacing.lg))
-
-                        O2PrimaryButton(
-                            text = stringResource(R.string.btn_back_to_main),
-                            onClick = onNavigateBack,
-                        )
                     }
                 }
             }

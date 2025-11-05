@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  O2 Branded Gradient Background
+
+  This is a gradient placeholder matching the O2 brand blue gradient.
+
+  TODO: Replace this with the actual O2 logo image (bg_o2_logo.webp or bg_o2_logo.png)
+  The image should show the white O2 logo on a blue gradient background going from
+  darker blue at top to lighter blue at bottom.
+
+  Gradient Colors:
+  - Start (top): Deep O2 Blue (#0112AA)
+  - End (bottom): Beyond Blue (#0050FF) with slight lightening
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="270"
+        android:endColor="#0070FF"
+        android:startColor="#0112AA"
+        android:type="linear" />
+</shape>

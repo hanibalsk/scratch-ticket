@@ -13,6 +13,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
+import sk.o2.scratchcard.presentation.components.O2BrandedBackground
+import sk.o2.scratchcard.presentation.components.O2ContentCard
 import sk.o2.scratchcard.presentation.components.O2PrimaryButton
 import sk.o2.scratchcard.presentation.components.O2StateBadge
 import sk.o2.scratchcard.presentation.theme.O2Spacing
@@ -74,43 +76,48 @@ private fun MainScreenContent(
     onNavigateToActivation: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(O2Spacing.md),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        // App title
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+    O2BrandedBackground(modifier = modifier) {
+        // Center the content card
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            O2ContentCard {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(O2Spacing.md),
+                ) {
+                    // App title
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
 
-        Spacer(modifier = Modifier.height(O2Spacing.lg))
+                    Spacer(modifier = Modifier.height(O2Spacing.sm))
 
-        // State badge - shows current card state
-        O2StateBadge(state = uiState.cardState)
+                    // State badge - shows current card state
+                    O2StateBadge(state = uiState.cardState)
 
-        Spacer(modifier = Modifier.height(O2Spacing.xl))
+                    Spacer(modifier = Modifier.height(O2Spacing.md))
 
-        // Go to Scratch Screen button (always enabled)
-        O2PrimaryButton(
-            text = stringResource(R.string.btn_go_to_scratch),
-            onClick = onNavigateToScratch,
-            enabled = true,
-        )
+                    // Go to Scratch Screen button (always enabled)
+                    O2PrimaryButton(
+                        text = stringResource(R.string.btn_go_to_scratch),
+                        onClick = onNavigateToScratch,
+                        enabled = true,
+                    )
 
-        Spacer(modifier = Modifier.height(O2Spacing.md))
-
-        // Go to Activation Screen button (enabled only when Scratched or Activated)
-        O2PrimaryButton(
-            text = stringResource(R.string.btn_go_to_activation),
-            onClick = onNavigateToActivation,
-            enabled = uiState.isActivationEnabled,
-        )
+                    // Go to Activation Screen button (enabled only when Scratched or Activated)
+                    O2PrimaryButton(
+                        text = stringResource(R.string.btn_go_to_activation),
+                        onClick = onNavigateToActivation,
+                        enabled = uiState.isActivationEnabled,
+                    )
+                }
+            }
+        }
     }
 }
 
