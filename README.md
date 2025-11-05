@@ -40,7 +40,7 @@ This app implements a scratch card feature with three states (Unscratched, Scrat
 | JUnit 5 | Unit testing framework | 5.11.4 |
 | MockK | Mocking library | 1.13.14 |
 | Turbine | Flow testing | 1.2.0 |
-| Kover | Code coverage | 0.9.0 |
+| Kover | Code coverage | 0.9.3 |
 
 **Coverage Target**: ≥50% enforced by Kover (focused on domain/data layers)
 
