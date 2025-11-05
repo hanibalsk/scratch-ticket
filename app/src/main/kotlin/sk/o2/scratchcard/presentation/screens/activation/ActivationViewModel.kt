@@ -1,5 +1,6 @@
 package sk.o2.scratchcard.presentation.screens.activation
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import sk.o2.scratchcard.R
 import sk.o2.scratchcard.data.di.IoDispatcher
 import sk.o2.scratchcard.domain.model.DomainException
 import sk.o2.scratchcard.domain.model.ScratchCardState
@@ -98,7 +100,7 @@ class ActivationViewModel
                                 _uiState.value =
                                     ActivationUiState.Error(
                                         ErrorType.Validation(
-                                            "This scratch card could not be activated. Please try again or contact support.",
+                                            messageRes = R.string.error_activation_failed_message,
                                         ),
                                     )
                                 Timber.w("Activation returned false (validation failed)")
@@ -114,7 +116,7 @@ class ActivationViewModel
                     // Catch any unexpected exceptions
                     _uiState.value =
                         ActivationUiState.Error(
-                            ErrorType.Unknown("An unexpected error occurred. Please try again."),
+                            ErrorType.Unknown(messageRes = R.string.error_unknown_message),
                         )
                     Timber.e(e, "Unexpected error in activation ViewModel")
                 }
@@ -138,36 +140,36 @@ class ActivationViewModel
             when (error) {
                 is DomainException.ValidationException ->
                     ErrorType.Validation(
-                        message = "This scratch card could not be activated. Please try again or contact support.",
+                        messageRes = R.string.error_activation_failed_message,
                         androidVersion = error.androidVersion,
                     )
                 is DomainException.NetworkException.NoConnection ->
                     ErrorType.Network(
-                        message = "No internet connection",
+                        messageRes = R.string.error_no_internet,
                         isTimeout = false,
                     )
                 is DomainException.NetworkException.Timeout ->
                     ErrorType.Network(
-                        message = "Request timed out",
+                        messageRes = R.string.error_request_timeout,
                         isTimeout = true,
                     )
                 is DomainException.HttpException.ClientError ->
                     ErrorType.Server(
-                        message = "Service unavailable, try again later",
+                        messageRes = R.string.error_service_unavailable_short,
                         statusCode = error.statusCode,
                     )
                 is DomainException.HttpException.ServerError ->
                     ErrorType.Server(
-                        message = "Service unavailable, try again later",
+                        messageRes = R.string.error_service_unavailable_short,
                         statusCode = error.statusCode,
                     )
                 is DomainException.ParsingException ->
                     ErrorType.Parsing(
-                        message = "Service temporarily unavailable. Please try again later.",
+                        messageRes = R.string.error_service_unavailable,
                     )
                 else ->
                     ErrorType.Unknown(
-                        message = "An unexpected error occurred. Please try again.",
+                        messageRes = R.string.error_unknown_message,
                     )
             }
 
@@ -228,70 +230,73 @@ sealed class ActivationUiState {
 /**
  * Error types for UI display (FR017).
  *
- * Each error type has appropriate title and message for error modal.
+ * Each error type has appropriate title and message resource IDs for error modal.
+ * Uses resource IDs to support localization and avoid hardcoded strings in ViewModels.
  */
 sealed class ErrorType {
-    abstract val message: String
+    abstract val messageRes: Int
 
     /**
-     * Get error modal title based on error type.
+     * Get error modal title resource ID based on error type.
      */
-    fun getTitle(): String =
-        when (this) {
-            is Validation -> "Activation Failed"
-            is Network -> "Connection Error"
-            is Server, is Parsing -> "Service Error"
-            is Unknown -> "Error"
-        }
+    @get:StringRes
+    val titleRes: Int
+        get() =
+            when (this) {
+                is Validation -> R.string.error_activation_failed_title
+                is Network -> R.string.error_connection_title
+                is Server, is Parsing -> R.string.error_service_title
+                is Unknown -> R.string.error_unknown_title
+            }
 
     /**
      * Network error (no connection or timeout).
      *
-     * @property message User-friendly error message
+     * @property messageRes String resource ID for error message
      * @property isTimeout Whether error was a timeout (vs no connection)
      */
     data class Network(
-        override val message: String,
+        @StringRes override val messageRes: Int,
         val isTimeout: Boolean,
     ) : ErrorType()
 
     /**
      * Server or HTTP error.
      *
-     * @property message User-friendly error message
+     * @property messageRes String resource ID for error message
      * @property statusCode HTTP status code (for debugging)
      */
     data class Server(
-        override val message: String,
+        @StringRes override val messageRes: Int,
         val statusCode: Int? = null,
     ) : ErrorType()
 
     /**
      * Parsing or serialization error.
      *
-     * @property message User-friendly error message
+     * @property messageRes String resource ID for error message
      */
     data class Parsing(
-        override val message: String,
+        @StringRes override val messageRes: Int,
     ) : ErrorType()
 
     /**
      * Validation error (android ≤ 277028).
      *
-     * @property message User-friendly error message
+     * @property messageRes String resource ID for error message
      * @property androidVersion The android version that failed validation
      */
     data class Validation(
-        override val message: String,
+        @StringRes override val messageRes: Int,
         val androidVersion: Int? = null,
     ) : ErrorType()
 
     /**
      * Unknown or unexpected error.
      *
-     * @property message User-friendly error message
+     * @property messageRes String resource ID for error message
      */
     data class Unknown(
-        override val message: String,
+        @StringRes override val messageRes: Int,
     ) : ErrorType()
 }

@@ -2,6 +2,7 @@ package sk.o2.scratchcard.util
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.test.espresso.Espresso
 
 /**
  * Extension function to simulate back button press in Compose UI tests.
@@ -16,8 +17,7 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
  */
 fun SemanticsNodeInteraction.performBack(): SemanticsNodeInteraction {
     // Use Espresso's pressBack() to simulate back button
-    androidx.test.espresso.Espresso
-        .pressBack()
+    Espresso.pressBack()
     return this
 }
 
@@ -31,7 +31,6 @@ fun SemanticsNodeInteraction.performBack(): SemanticsNodeInteraction {
  */
 fun ComposeContentTestRule.performBack() {
     waitForIdle()
-    androidx.test.espresso.Espresso
-        .pressBack()
+    Espresso.pressBack()
     waitForIdle()
 }

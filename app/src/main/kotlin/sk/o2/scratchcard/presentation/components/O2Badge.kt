@@ -7,8 +7,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.presentation.theme.O2Colors
 import sk.o2.scratchcard.presentation.theme.O2Theme
@@ -42,9 +44,11 @@ fun O2StateBadge(
 ) {
     val (text, color) =
         when (state) {
-            is ScratchCardState.Unscratched -> "Unscratched" to O2Colors.Neutral600
-            is ScratchCardState.Scratched -> "Scratched" to MaterialTheme.colorScheme.primary
-            is ScratchCardState.Activated -> "Activated" to O2Colors.Success
+            is ScratchCardState.Unscratched -> stringResource(R.string.state_unscratched) to O2Colors.Neutral600
+            is ScratchCardState.Scratched ->
+                stringResource(R.string.state_scratched) to
+                    MaterialTheme.colorScheme.primary
+            is ScratchCardState.Activated -> stringResource(R.string.state_activated) to O2Colors.Success
         }
 
     Surface(

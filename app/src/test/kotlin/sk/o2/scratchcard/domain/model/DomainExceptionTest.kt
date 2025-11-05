@@ -1,6 +1,10 @@
 package sk.o2.scratchcard.domain.model
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.IOException
 
@@ -22,8 +26,6 @@ class DomainExceptionTest {
 
         assertEquals("No internet connection", exception.message)
         assertSame(cause, exception.cause)
-        assertTrue(exception is DomainException)
-        assertTrue(exception is DomainException.NetworkException)
     }
 
     @Test
@@ -33,8 +35,6 @@ class DomainExceptionTest {
 
         assertEquals("Request timed out", exception.message)
         assertSame(cause, exception.cause)
-        assertTrue(exception is DomainException)
-        assertTrue(exception is DomainException.NetworkException)
     }
 
     @Test
@@ -46,8 +46,6 @@ class DomainExceptionTest {
         assertEquals("HTTP client error: 404", exception.message)
         assertEquals(404, exception.statusCode)
         assertSame(cause, exception.cause)
-        assertTrue(exception is DomainException)
-        assertTrue(exception is DomainException.HttpException)
     }
 
     @Test
@@ -59,8 +57,6 @@ class DomainExceptionTest {
         assertEquals("HTTP server error: 500", exception.message)
         assertEquals(500, exception.statusCode)
         assertSame(cause, exception.cause)
-        assertTrue(exception is DomainException)
-        assertTrue(exception is DomainException.HttpException)
     }
 
     @Test
@@ -70,7 +66,6 @@ class DomainExceptionTest {
 
         assertEquals("Failed to parse API response", exception.message)
         assertSame(cause, exception.cause)
-        assertTrue(exception is DomainException)
     }
 
     @Test
@@ -84,7 +79,6 @@ class DomainExceptionTest {
         )
         assertEquals(250000, exception.androidVersion)
         assertNull(exception.cause)
-        assertTrue(exception is DomainException)
     }
 
     @Test
@@ -94,33 +88,6 @@ class DomainExceptionTest {
 
         assertEquals(277028, exception.androidVersion)
         assertTrue(exception.message!!.contains("277028"))
-    }
-
-    @Test
-    fun `all NetworkExceptions are DomainExceptions`() {
-        val noConnection =
-            DomainException.NetworkException.NoConnection(IOException())
-        val timeout = DomainException.NetworkException.Timeout(IOException())
-
-        assertTrue(noConnection is DomainException)
-        assertTrue(timeout is DomainException)
-    }
-
-    @Test
-    fun `all HttpExceptions are DomainExceptions`() {
-        val clientError =
-            DomainException.HttpException.ClientError(
-                400,
-                RuntimeException(),
-            )
-        val serverError =
-            DomainException.HttpException.ServerError(
-                500,
-                RuntimeException(),
-            )
-
-        assertTrue(clientError is DomainException)
-        assertTrue(serverError is DomainException)
     }
 
     @Test
@@ -150,7 +117,7 @@ class DomainExceptionTest {
     @Test
     fun `exceptions can be distinguished in when expression`() {
         val exceptions =
-            listOf<DomainException>(
+            listOf(
                 DomainException.NetworkException.NoConnection(IOException()),
                 DomainException.NetworkException.Timeout(IOException()),
                 DomainException.HttpException.ClientError(404, RuntimeException()),

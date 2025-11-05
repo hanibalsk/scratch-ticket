@@ -59,8 +59,8 @@ fun ActivationScreen(
         val errorType = (uiState as ActivationUiState.Error).errorType
 
         O2ErrorDialog(
-            title = errorType.getTitle(),
-            message = errorType.message,
+            title = stringResource(errorType.titleRes),
+            message = stringResource(errorType.messageRes),
             onRetry =
                 if (cardState is ScratchCardState.Scratched) {
                     { viewModel.retryActivation((cardState as ScratchCardState.Scratched).code) }
@@ -104,7 +104,7 @@ fun ActivationScreen(
                     O2Card {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "Code Activated",
+                                text = stringResource(R.string.msg_code_activated),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
@@ -122,7 +122,7 @@ fun ActivationScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.xl))
 
                 O2PrimaryButton(
-                    text = "Back to Main",
+                    text = stringResource(R.string.btn_back_to_main),
                     onClick = onNavigateBack,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -135,7 +135,7 @@ fun ActivationScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.md))
 
                 Text(
-                    text = "Activating...",
+                    text = stringResource(R.string.msg_activating),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -143,7 +143,7 @@ fun ActivationScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.sm))
 
                 Text(
-                    text = "Please wait",
+                    text = stringResource(R.string.msg_please_wait),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -156,7 +156,7 @@ fun ActivationScreen(
                         O2Card {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
-                                    text = "Activate Your Card",
+                                    text = stringResource(R.string.msg_activate_your_card),
                                     style = MaterialTheme.typography.headlineMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -164,7 +164,7 @@ fun ActivationScreen(
                                 Spacer(modifier = Modifier.height(O2Spacing.md))
 
                                 Text(
-                                    text = "Your scratch code:",
+                                    text = stringResource(R.string.msg_your_scratch_code),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -181,7 +181,7 @@ fun ActivationScreen(
                                 Spacer(modifier = Modifier.height(O2Spacing.md))
 
                                 Text(
-                                    text = "Tap the button below to activate",
+                                    text = stringResource(R.string.msg_tap_to_activate),
                                     style = MaterialTheme.typography.bodyMedium,
                                     textAlign = TextAlign.Center,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -202,7 +202,7 @@ fun ActivationScreen(
                         // Already activated - show message
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Already activated",
+                            contentDescription = stringResource(R.string.cd_already_activated),
                             tint = O2Colors.Success,
                             modifier = Modifier.size(64.dp),
                         )
@@ -210,7 +210,7 @@ fun ActivationScreen(
                         Spacer(modifier = Modifier.height(O2Spacing.md))
 
                         Text(
-                            text = "Card Already Activated",
+                            text = stringResource(R.string.msg_card_already_activated),
                             style = MaterialTheme.typography.headlineMedium,
                             color = O2Colors.Success,
                         )
@@ -218,7 +218,7 @@ fun ActivationScreen(
                         Spacer(modifier = Modifier.height(O2Spacing.xl))
 
                         O2PrimaryButton(
-                            text = "Back to Main",
+                            text = stringResource(R.string.btn_back_to_main),
                             onClick = onNavigateBack,
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -227,7 +227,7 @@ fun ActivationScreen(
                     is ScratchCardState.Unscratched -> {
                         // No code to activate - should not reach here via navigation
                         Text(
-                            text = "No scratch code available",
+                            text = stringResource(R.string.msg_no_scratch_code),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.error,
                         )
@@ -235,7 +235,7 @@ fun ActivationScreen(
                         Spacer(modifier = Modifier.height(O2Spacing.lg))
 
                         O2PrimaryButton(
-                            text = "Back to Main",
+                            text = stringResource(R.string.btn_back_to_main),
                             onClick = onNavigateBack,
                         )
                     }

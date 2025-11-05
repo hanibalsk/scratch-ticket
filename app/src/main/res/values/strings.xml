@@ -24,6 +24,19 @@
     <string name="msg_scratching_progress">Scratching… %d%%</string>
     <string name="msg_code_revealed">Code Revealed!</string>
     <string name="msg_activation_success">Card Activated Successfully!</string>
+    <string name="msg_scratch_your_card">Scratch Your Card</string>
+    <string name="msg_tap_to_reveal_code">Tap the button below to reveal your unique code</string>
+    <string name="msg_code_activated">Code Activated</string>
+    <string name="msg_activating">Activating…</string>
+    <string name="msg_please_wait">Please wait</string>
+    <string name="msg_activate_your_card">Activate Your Card</string>
+    <string name="msg_your_scratch_code">Your scratch code:</string>
+    <string name="msg_tap_to_activate">Tap the button below to activate</string>
+    <string name="msg_card_already_activated">Card Already Activated</string>
+    <string name="msg_no_scratch_code">No scratch code available</string>
+
+    <!-- Buttons -->
+    <string name="btn_back_to_main">Back to Main</string>
 
     <!-- Errors -->
     <string name="error_activation_failed_title">Activation Failed</string>
@@ -33,8 +46,13 @@
     <string name="error_request_timeout">Request timed out</string>
     <string name="error_service_title">Service Error</string>
     <string name="error_service_unavailable">Service temporarily unavailable. Please try again later.</string>
+    <string name="error_unknown_title">Error</string>
+    <string name="error_unknown_message">An unexpected error occurred. Please try again.</string>
+    <string name="error_service_unavailable_short">Service unavailable, try again later</string>
 
     <!-- Content descriptions (accessibility) -->
     <string name="cd_state_badge">Current card state</string>
     <string name="cd_loading_indicator">Loading</string>
+    <string name="cd_scratch_complete">Scratch complete</string>
+    <string name="cd_already_activated">Already activated</string>
 </resources>

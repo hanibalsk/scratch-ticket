@@ -20,6 +20,7 @@ import dagger.hilt.android.testing.HiltTestApplication
  * }
  * ```
  */
+@Suppress("unused")
 class HiltTestRunner : AndroidJUnitRunner() {
     override fun newApplication(
         cl: ClassLoader?,

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import sk.o2.scratchcard.data.remote.O2ApiService
 import sk.o2.scratchcard.data.remote.O2VersionResponse
+import sk.o2.scratchcard.domain.model.DomainException
 import sk.o2.scratchcard.domain.model.ScratchCardState
 
 /**
@@ -161,7 +162,7 @@ class ScratchCardRepositoryImplTest {
 
             // Verify result is failure with ValidationException
             assertTrue(result.isFailure)
-            assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
+            assertTrue(result.exceptionOrNull() is DomainException.ValidationException)
 
             // Verify state did NOT change (remains Unscratched in this test context)
             val currentState = repository.cardState.value
@@ -180,7 +181,7 @@ class ScratchCardRepositoryImplTest {
 
             // Verify result is failure with ValidationException
             assertTrue(result.isFailure)
-            assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
+            assertTrue(result.exceptionOrNull() is DomainException.ValidationException)
 
             // State should not transition
             val currentState = repository.cardState.value
@@ -273,6 +274,6 @@ class ScratchCardRepositoryImplTest {
 
             // Verify result is failure with ValidationException
             assertTrue(result.isFailure)
-            assertTrue(result.exceptionOrNull() is sk.o2.scratchcard.domain.model.DomainException.ValidationException)
+            assertTrue(result.exceptionOrNull() is DomainException.ValidationException)
         }
 }

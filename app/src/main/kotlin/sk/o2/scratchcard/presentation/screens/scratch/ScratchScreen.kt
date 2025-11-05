@@ -12,10 +12,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.presentation.components.O2Card
 import sk.o2.scratchcard.presentation.components.O2LoadingIndicator
@@ -73,7 +75,7 @@ fun ScratchScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.md))
 
                 Text(
-                    text = "Scratching... ${(scratchProgress * 100).toInt()}%",
+                    text = stringResource(R.string.msg_scratching_progress, (scratchProgress * 100).toInt()),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -83,7 +85,7 @@ fun ScratchScreen(
             cardState is ScratchCardState.Scratched -> {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Scratch complete",
+                    contentDescription = stringResource(R.string.cd_scratch_complete),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(64.dp),
                 )
@@ -91,7 +93,7 @@ fun ScratchScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.md))
 
                 Text(
-                    text = "Code Revealed!",
+                    text = stringResource(R.string.msg_code_revealed),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -110,7 +112,7 @@ fun ScratchScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.xl))
 
                 O2PrimaryButton(
-                    text = "Back to Main",
+                    text = stringResource(R.string.btn_back_to_main),
                     onClick = onNavigateBack,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -124,7 +126,7 @@ fun ScratchScreen(
                         modifier = Modifier.padding(O2Spacing.lg),
                     ) {
                         Text(
-                            text = "Scratch Your Card",
+                            text = stringResource(R.string.msg_scratch_your_card),
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -132,7 +134,7 @@ fun ScratchScreen(
                         Spacer(modifier = Modifier.height(O2Spacing.md))
 
                         Text(
-                            text = "Tap the button below to reveal your unique code",
+                            text = stringResource(R.string.msg_tap_to_reveal_code),
                             style = MaterialTheme.typography.bodyLarge,
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -143,7 +145,7 @@ fun ScratchScreen(
                 Spacer(modifier = Modifier.height(O2Spacing.xl))
 
                 O2PrimaryButton(
-                    text = "Scratch Card",
+                    text = stringResource(R.string.btn_scratch_card),
                     onClick = { viewModel.startScratch() },
                     enabled = !isScratching,
                     modifier = Modifier.fillMaxWidth(),

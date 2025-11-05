@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.DomainException
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.domain.repository.ScratchCardRepository
@@ -115,7 +116,7 @@ class ActivationViewModelTest {
 
                 val errorState = awaitItem() as ActivationUiState.Error
                 assertTrue(errorState.errorType is ErrorType.Network)
-                assertEquals("No internet connection", errorState.errorType.message)
+                assertEquals(R.string.error_no_internet, errorState.errorType.messageRes)
                 assertFalse((errorState.errorType as ErrorType.Network).isTimeout)
             }
         }
@@ -139,7 +140,7 @@ class ActivationViewModelTest {
 
                 val errorState = awaitItem() as ActivationUiState.Error
                 assertTrue(errorState.errorType is ErrorType.Network)
-                assertEquals("Request timed out", errorState.errorType.message)
+                assertEquals(R.string.error_request_timeout, errorState.errorType.messageRes)
                 assertTrue((errorState.errorType as ErrorType.Network).isTimeout)
             }
         }
@@ -249,11 +250,32 @@ class ActivationViewModelTest {
         }
 
     @Test
-    fun `error type titles are correct`() {
-        assertEquals("Activation Failed", ErrorType.Validation("msg").getTitle())
-        assertEquals("Connection Error", ErrorType.Network("msg", false).getTitle())
-        assertEquals("Service Error", ErrorType.Server("msg").getTitle())
-        assertEquals("Service Error", ErrorType.Parsing("msg").getTitle())
-        assertEquals("Error", ErrorType.Unknown("msg").getTitle())
+    fun `error type title resource IDs are correct`() {
+        assertEquals(
+            R.string.error_activation_failed_title,
+            ErrorType.Validation(R.string.error_activation_failed_message).titleRes,
+        )
+        assertEquals(R.string.error_connection_title, ErrorType.Network(R.string.error_no_internet, false).titleRes)
+        assertEquals(R.string.error_service_title, ErrorType.Server(R.string.error_service_unavailable).titleRes)
+        assertEquals(R.string.error_service_title, ErrorType.Parsing(R.string.error_service_unavailable).titleRes)
+        assertEquals(R.string.error_unknown_title, ErrorType.Unknown(R.string.error_unknown_message).titleRes)
+    }
+
+    @Test
+    fun `error type message resource IDs are preserved`() {
+        assertEquals(
+            R.string.error_activation_failed_message,
+            ErrorType.Validation(R.string.error_activation_failed_message).messageRes,
+        )
+        assertEquals(R.string.error_no_internet, ErrorType.Network(R.string.error_no_internet, false).messageRes)
+        assertEquals(
+            R.string.error_service_unavailable,
+            ErrorType.Server(R.string.error_service_unavailable).messageRes,
+        )
+        assertEquals(
+            R.string.error_service_unavailable,
+            ErrorType.Parsing(R.string.error_service_unavailable).messageRes,
+        )
+        assertEquals(R.string.error_unknown_message, ErrorType.Unknown(R.string.error_unknown_message).messageRes)
     }
 }

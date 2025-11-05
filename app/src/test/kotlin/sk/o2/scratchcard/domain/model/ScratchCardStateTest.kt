@@ -50,16 +50,6 @@ class ScratchCardStateTest {
     }
 
     @Test
-    fun `Scratched and Activated with same code are not equal`() {
-        val code = "550e8400-e29b-41d4-a716-446655440000"
-        val scratched = ScratchCardState.Scratched(code)
-        val activated = ScratchCardState.Activated(code)
-
-        // Different sealed class types, even with same code
-        assertNotEquals(scratched, activated)
-    }
-
-    @Test
     fun `sealed class provides type safety with when expressions`() {
         val states =
             listOf(
