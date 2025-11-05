@@ -34,8 +34,8 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
  */
 @Composable
 fun O2LoadingIndicator(
-    progress: Float? = null,
     modifier: Modifier = Modifier,
+    progress: Float? = null,
 ) {
     if (progress != null) {
         // Determinate progress (e.g., 2-second scratch countdown)

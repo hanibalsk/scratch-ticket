@@ -10,7 +10,7 @@ package sk.o2.scratchcard.domain.model
  * - NetworkException: Connection issues (no internet, timeout)
  * - HttpException: API response errors (4xx, 5xx)
  * - ParsingException: Response parsing/serialization errors
- * - ValidationException: Business logic validation failures (android ≤ 277028)
+ * - ValidationException: Business logic validation failures (android version below threshold)
  *
  * Usage:
  * ```kotlin

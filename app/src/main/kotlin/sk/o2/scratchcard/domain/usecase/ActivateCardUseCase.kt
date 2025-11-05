@@ -8,7 +8,7 @@ import javax.inject.Inject
  *
  * Encapsulates the business logic for card activation:
  * - Calls O2 API to validate the scratch code
- * - Validates response: success if android version > 277028
+ * - Validates response: success if android version > threshold (see [sk.o2.scratchcard.data.remote.O2ApiService.ANDROID_VERSION_THRESHOLD])
  * - State transition from Scratched to Activated on success
  *
  * This use case follows the Single Responsibility Principle - it has one
@@ -38,7 +38,7 @@ class ActivateCardUseCase
          *         if (isActivated) {
          *             // Card activated successfully
          *         } else {
-         *             // Validation failed (android ≤ 277028)
+         *             // Validation failed (android version below threshold)
          *         }
          *     }.onFailure { error ->
          *         // Handle network/parsing error
@@ -48,8 +48,8 @@ class ActivateCardUseCase
          *
          * @param code The UUID code to activate (obtained from scratch operation)
          * @return Result containing:
-         *         - true if activation successful (android > 277028)
-         *         - false if validation failed (android ≤ 277028)
+         *         - true if activation successful (android version above threshold)
+         *         - false if validation failed (android version at or below threshold)
          *         - exception for network, timeout, or parsing errors
          */
         suspend operator fun invoke(code: String): Result<Boolean> = repository.activateCard(code)

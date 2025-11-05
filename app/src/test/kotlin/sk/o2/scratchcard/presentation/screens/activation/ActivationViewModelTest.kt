@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import sk.o2.scratchcard.R
+import sk.o2.scratchcard.data.remote.O2ApiService.Companion.ANDROID_VERSION_THRESHOLD
 import sk.o2.scratchcard.domain.model.DomainException
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.domain.repository.ScratchCardRepository
@@ -80,7 +81,10 @@ class ActivationViewModelTest {
     @Test
     fun `activateCard maps ValidationException to Validation error`() =
         runTest(testDispatcher) {
-            val validationError = DomainException.ValidationException(277028)
+            val validationError =
+                DomainException.ValidationException(
+                    ANDROID_VERSION_THRESHOLD,
+                )
             coEvery { mockUseCase("test-code") } returns Result.failure(validationError)
 
             viewModel.uiState.test {
@@ -93,7 +97,10 @@ class ActivationViewModelTest {
 
                 val errorState = awaitItem() as ActivationUiState.Error
                 assertTrue(errorState.errorType is ErrorType.Validation)
-                assertEquals(277028, (errorState.errorType as ErrorType.Validation).androidVersion)
+                assertEquals(
+                    ANDROID_VERSION_THRESHOLD,
+                    (errorState.errorType as ErrorType.Validation).androidVersion,
+                )
             }
         }
 
@@ -196,7 +203,9 @@ class ActivationViewModelTest {
         runTest {
             coEvery { mockUseCase("test-code") } returns
                 Result.failure(
-                    DomainException.ValidationException(277028),
+                    DomainException.ValidationException(
+                        ANDROID_VERSION_THRESHOLD,
+                    ),
                 )
 
             viewModel.activateCard("test-code")

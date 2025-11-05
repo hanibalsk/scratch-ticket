@@ -1,16 +1,22 @@
 package sk.o2.scratchcard.data.repository
 
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerializationException
 import sk.o2.scratchcard.data.di.IoDispatcher
 import sk.o2.scratchcard.data.remote.O2ApiService
+import sk.o2.scratchcard.domain.model.DomainException
 import sk.o2.scratchcard.domain.model.ScratchCardState
 import sk.o2.scratchcard.domain.repository.ScratchCardRepository
 import timber.log.Timber
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,14 +97,14 @@ class ScratchCardRepositoryImpl
          *
          * Implementation:
          * 1. Calls apiService.validateCode(code)
-         * 2. Checks if response.android > 277028
+         * 2. Checks if response.android > [O2ApiService.ANDROID_VERSION_THRESHOLD]
          * 3. If valid: transitions to Activated state, returns true
          * 4. If invalid: state remains Scratched, returns false
          * 5. On exception: propagates error, state unchanged
          *
          * State Transitions:
-         * - Success (android > 277028): Scratched(code) → Activated(code)
-         * - Failure (android ≤ 277028): Scratched(code) remains
+         * - Success (android > threshold): Scratched(code) → Activated(code)
+         * - Failure (android ≤ threshold): Scratched(code) remains
          * - Error: Scratched(code) remains
          *
          * @param code UUID code to validate (from Scratched state)
@@ -114,8 +120,8 @@ class ScratchCardRepositoryImpl
                     val response = apiService.validateCode(code)
                     Timber.d("API response received - android version: ${response.android}")
 
-                    // Validate threshold: success if android > 277028
-                    val isValid = response.android > 277028
+                    // Validate threshold: success if android > ANDROID_VERSION_THRESHOLD
+                    val isValid = response.android > O2ApiService.ANDROID_VERSION_THRESHOLD
 
                     if (isValid) {
                         // Validation successful - transition to Activated
@@ -124,46 +130,42 @@ class ScratchCardRepositoryImpl
                         Result.success(true)
                     } else {
                         // Validation failed - state remains Scratched (FR017)
-                        Timber.w("Validation failed - android version ${response.android} ≤ 277028")
+                        Timber.w(
+                            "Validation failed - android version ${response.android} ≤ ${O2ApiService.ANDROID_VERSION_THRESHOLD}",
+                        )
                         Result.failure(
-                            sk.o2.scratchcard.domain.model.DomainException
-                                .ValidationException(response.android),
+                            DomainException.ValidationException(response.android),
                         )
                     }
-                } catch (e: java.net.UnknownHostException) {
+                } catch (e: UnknownHostException) {
                     // Network error: No internet connection
                     Timber.e(e, "Network error: No internet connection")
                     Result.failure(
-                        sk.o2.scratchcard.domain.model.DomainException.NetworkException
-                            .NoConnection(e),
+                        DomainException.NetworkException.NoConnection(e),
                     )
-                } catch (e: java.net.SocketTimeoutException) {
+                } catch (e: SocketTimeoutException) {
                     // Network error: Request timed out
                     Timber.e(e, "Network error: Request timed out after 10 seconds")
                     Result.failure(
-                        sk.o2.scratchcard.domain.model.DomainException.NetworkException
-                            .Timeout(e),
+                        DomainException.NetworkException.Timeout(e),
                     )
-                } catch (e: io.ktor.client.plugins.ClientRequestException) {
+                } catch (e: ClientRequestException) {
                     // HTTP error: 4xx status codes
                     Timber.e(e, "HTTP client error: ${e.response.status.value}")
                     Result.failure(
-                        sk.o2.scratchcard.domain.model.DomainException.HttpException
-                            .ClientError(e.response.status.value, e),
+                        DomainException.HttpException.ClientError(e.response.status.value, e),
                     )
-                } catch (e: io.ktor.client.plugins.ServerResponseException) {
+                } catch (e: ServerResponseException) {
                     // HTTP error: 5xx status codes
                     Timber.e(e, "HTTP server error: ${e.response.status.value}")
                     Result.failure(
-                        sk.o2.scratchcard.domain.model.DomainException.HttpException
-                            .ServerError(e.response.status.value, e),
+                        DomainException.HttpException.ServerError(e.response.status.value, e),
                     )
-                } catch (e: kotlinx.serialization.SerializationException) {
+                } catch (e: SerializationException) {
                     // Parsing error: Malformed JSON or missing fields
                     Timber.e(e, "Parsing error: Malformed API response")
                     Result.failure(
-                        sk.o2.scratchcard.domain.model.DomainException
-                            .ParsingException(e),
+                        DomainException.ParsingException(e),
                     )
                 } catch (e: Exception) {
                     // Unknown error

@@ -1,6 +1,9 @@
 package sk.o2.scratchcard.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -111,11 +114,9 @@ fun O2Chip(
 @Composable
 fun O2StateBadgeAllStatesLightPreview() {
     O2Theme(darkTheme = false) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement =
-                androidx.compose.foundation.layout.Arrangement
-                    .spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2StateBadge(state = ScratchCardState.Unscratched)
             O2StateBadge(state = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"))
@@ -128,11 +129,9 @@ fun O2StateBadgeAllStatesLightPreview() {
 @Composable
 fun O2StateBadgeAllStatesDarkPreview() {
     O2Theme(darkTheme = true) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement =
-                androidx.compose.foundation.layout.Arrangement
-                    .spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2StateBadge(state = ScratchCardState.Unscratched)
             O2StateBadge(state = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"))
@@ -145,11 +144,9 @@ fun O2StateBadgeAllStatesDarkPreview() {
 @Composable
 fun O2ChipLightPreview() {
     O2Theme(darkTheme = false) {
-        androidx.compose.foundation.layout.Row(
+        Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement =
-                androidx.compose.foundation.layout.Arrangement
-                    .spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2Chip(text = "Tag 1")
             O2Chip(text = "Tag 2")
@@ -161,11 +158,9 @@ fun O2ChipLightPreview() {
 @Composable
 fun O2ChipDarkPreview() {
     O2Theme(darkTheme = true) {
-        androidx.compose.foundation.layout.Row(
+        Row(
             modifier = Modifier.padding(16.dp),
-            horizontalArrangement =
-                androidx.compose.foundation.layout.Arrangement
-                    .spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             O2Chip(text = "Tag 1")
             O2Chip(text = "Tag 2")

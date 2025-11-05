@@ -36,11 +36,11 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
  */
 @Composable
 fun O2ErrorDialog(
+    modifier: Modifier = Modifier,
     title: String,
     message: String,
     onRetry: (() -> Unit)? = null,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,

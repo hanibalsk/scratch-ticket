@@ -5,6 +5,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.junit.jupiter.api.Assertions.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import org.junit.jupiter.api.Test
 
 /**
@@ -131,7 +132,7 @@ class O2ThemeTest {
     @Test
     fun `O2Shapes small for buttons has 12dp radius`() {
         val shape = O2Shapes.small
-        assertTrue(shape is androidx.compose.foundation.shape.RoundedCornerShape)
+        assertTrue(shape is RoundedCornerShape)
         // Note: Exact radius validation would require accessing private fields
         // This test validates the shape type is RoundedCornerShape
     }
@@ -139,13 +140,13 @@ class O2ThemeTest {
     @Test
     fun `O2Shapes medium for cards has 16dp radius`() {
         val shape = O2Shapes.medium
-        assertTrue(shape is androidx.compose.foundation.shape.RoundedCornerShape)
+        assertTrue(shape is RoundedCornerShape)
     }
 
     @Test
     fun `O2Shapes large for dialogs has 24dp radius`() {
         val shape = O2Shapes.large
-        assertTrue(shape is androidx.compose.foundation.shape.RoundedCornerShape)
+        assertTrue(shape is RoundedCornerShape)
     }
 
     // ═══════════════════════════════════════════════════════════

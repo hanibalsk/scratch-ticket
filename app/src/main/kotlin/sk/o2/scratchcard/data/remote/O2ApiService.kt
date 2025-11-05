@@ -31,7 +31,7 @@ class O2ApiService
          *
          * Calls the O2 version endpoint to check if the scratch code is valid.
          * The API returns an android version number which is compared against
-         * threshold value 277028 to determine activation eligibility.
+         * [ANDROID_VERSION_THRESHOLD] to determine activation eligibility.
          *
          * API Details:
          * - Method: GET
@@ -67,6 +67,19 @@ class O2ApiService
                 throw e
             }
         }
+
+        companion object {
+            /**
+             * Android version threshold for scratch card validation.
+             *
+             * Scratch cards are considered successfully activated if the API
+             * returns an android version number greater than this threshold.
+             *
+             * - android > 277028: Activation successful
+             * - android ≤ 277028: Activation failed (validation error)
+             */
+            const val ANDROID_VERSION_THRESHOLD = 277028
+        }
     }
 
 /**
@@ -80,9 +93,9 @@ class O2ApiService
  * ```
  *
  * The "android" field contains a version number that determines
- * activation eligibility. Values > 277028 indicate successful activation.
+ * activation eligibility. Values > [O2ApiService.ANDROID_VERSION_THRESHOLD] indicate successful activation.
  *
- * @property android Version number for Android platform (threshold: > 277028 for success)
+ * @property android Version number for Android platform
  */
 @Serializable
 data class O2VersionResponse(

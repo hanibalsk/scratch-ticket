@@ -8,9 +8,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -45,14 +45,13 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 @Composable
 fun ScratchScreen(
     onNavigateBack: () -> Unit,
-    viewModel: ScratchViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
+    viewModel: ScratchViewModel = hiltViewModel(),
 ) {
-    val cardState by viewModel.cardState.collectAsState()
-    val isScratching by viewModel.isScratching.collectAsState()
-    val scratchProgress by viewModel.scratchProgress.collectAsState()
-    val revealedCode by viewModel.revealedCode.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+    val cardState by viewModel.cardState.collectAsStateWithLifecycle()
+    val isScratching by viewModel.isScratching.collectAsStateWithLifecycle()
+    val scratchProgress by viewModel.scratchProgress.collectAsStateWithLifecycle()
+    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
 
     // Allow back navigation during scratch - operation will cancel
     BackHandler {
@@ -147,7 +146,6 @@ fun ScratchScreen(
                 O2PrimaryButton(
                     text = stringResource(R.string.btn_scratch_card),
                     onClick = { viewModel.startScratch() },
-                    enabled = !isScratching,
                     modifier = Modifier.fillMaxWidth(),
                 )
 

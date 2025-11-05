@@ -37,7 +37,7 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
  * - Loading indicator during API call
  *
  * Error Handling:
- * - Validation Failed: android ≤ 277028
+ * - Validation Failed: android version at or below threshold
  * - Network Errors: No connection, timeout
  * - Server Errors: 4xx, 5xx responses
  * - Parsing Errors: Malformed JSON

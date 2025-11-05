@@ -104,9 +104,7 @@ fun O2SecondaryButton(
                 disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
             ),
         border =
-            ButtonDefaults.outlinedButtonBorder(enabled = enabled).copy(
-                width = 1.dp,
-            ),
+            ButtonDefaults.outlinedButtonBorder(enabled = enabled).copy(width = 1.dp),
         shape = MaterialTheme.shapes.small, // 12dp radius
     ) {
         Text(
