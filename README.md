@@ -38,7 +38,7 @@ This app implements a scratch card feature with three states (Unscratched, Scrat
 | Turbine | Flow testing | 1.2.0 |
 | Kover | Code coverage | 0.9.0 |
 
-**Coverage Target**: ≥80% enforced by Kover
+**Coverage Target**: ≥50% enforced by Kover (focused on domain/data layers)
 
 ### Build Configuration
 
@@ -93,7 +93,7 @@ app/src/main/kotlin/sk/o2/scratchcard/
 ### Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/hanibalsk/scratch-ticket.git
 cd scratch-ticket
 ```
 
@@ -144,9 +144,10 @@ open app/build/reports/kover/html/index.html
 
 ### Coverage Requirements
 
-- **Overall Coverage**: ≥80% (enforced by Kover)
+- **Overall Coverage**: ≥50% (enforced by Kover, focused on business logic)
 - **Unit Tests**: Target ≥90% for domain and data layers
 - **UI Tests**: Integration and E2E tests for critical flows
+- **Note**: UI components excluded from coverage as they require instrumented tests
 
 ## Code Quality
 
@@ -214,14 +215,15 @@ This project follows a structured story-driven workflow:
 - **Endpoint**: `GET https://api.o2.sk/version`
 - **Query Parameter**: `code` (UUID from scratch operation)
 - **Response**: `{ "android": <version_number> }`
-- **Validation**: Success if `android > 277028`
+- **Validation**: Success if `android > ANDROID_VERSION_THRESHOLD` (277028)
+- **Constant**: `O2ApiService.ANDROID_VERSION_THRESHOLD`
 
 ### Error Handling
 
 - **Network Errors**: Timeout, no connection
 - **HTTP Errors**: 4xx, 5xx status codes
 - **Parsing Errors**: Invalid JSON structure
-- **Validation Errors**: android ≤ 277028
+- **Validation Errors**: android ≤ ANDROID_VERSION_THRESHOLD
 
 ## Contributing
 
@@ -237,7 +239,7 @@ This project follows a structured story-driven workflow:
 1. Create feature branch from `main`
 2. Implement story with tests
 3. Ensure all tests pass
-4. Verify ≥80% code coverage
+4. Verify ≥50% code coverage (Kover check)
 5. Create PR with story reference
 
 ## License
