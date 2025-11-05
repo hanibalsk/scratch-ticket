@@ -1,0 +1,32 @@
+# Configuration for PR Labeler
+# Automatically labels PRs based on changed files
+
+domain:
+  - changed-files:
+    - any-glob-to-any-file: 'app/src/main/kotlin/**/domain/**/*'
+
+data:
+  - changed-files:
+    - any-glob-to-any-file: 'app/src/main/kotlin/**/data/**/*'
+
+presentation:
+  - changed-files:
+    - any-glob-to-any-file: 'app/src/main/kotlin/**/presentation/**/*'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: 'app/src/test/**/*'
+    - any-glob-to-any-file: 'app/src/androidTest/**/*'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: '**/build.gradle.kts'
+    - any-glob-to-any-file: 'gradle/libs.versions.toml'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**/*'
