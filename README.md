@@ -1,5 +1,9 @@
 # O2 Scratch Card - Android Application
 
+[![Android CI](https://github.com/hanibalsk/scratch-ticket/workflows/Android%20CI/badge.svg)](https://github.com/hanibalsk/scratch-ticket/actions/workflows/android-ci.yml)
+[![CodeQL](https://github.com/hanibalsk/scratch-ticket/workflows/CodeQL%20Analysis/badge.svg)](https://github.com/hanibalsk/scratch-ticket/actions/workflows/codeql.yml)
+[![Dependency Review](https://github.com/hanibalsk/scratch-ticket/workflows/Dependency%20Review/badge.svg)](https://github.com/hanibalsk/scratch-ticket/actions/workflows/dependency-review.yml)
+
 A native Android application demonstrating Clean Architecture, MVVM pattern, and modern Android development best practices using Jetpack Compose.
 
 ## Project Overview
