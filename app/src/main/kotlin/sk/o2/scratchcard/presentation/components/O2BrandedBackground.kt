@@ -1,6 +1,5 @@
 package sk.o2.scratchcard.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -17,11 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import sk.o2.scratchcard.R
 import sk.o2.scratchcard.presentation.theme.O2Colors
 import sk.o2.scratchcard.presentation.theme.O2Spacing
 import sk.o2.scratchcard.presentation.theme.O2Theme
@@ -68,19 +64,21 @@ fun O2BrandedBackground(
                         ),
                 ),
     ) {
-        // Background logo/gradient image in top half
-        // TODO: Replace R.drawable.bg_o2_gradient with actual logo image (bg_o2_logo.webp or bg_o2_logo.png)
-        // The gradient drawable serves as a placeholder until the actual image is added
+        // TODO: Add O2 logo image here when available
+        // Place your O2 logo image as app/src/main/res/drawable/bg_o2_logo.webp (or .png)
+        // Then uncomment the Image composable below:
+        /*
         Image(
-            painter = painterResource(id = R.drawable.bg_o2_gradient),
+            painter = painterResource(id = R.drawable.bg_o2_logo),
             contentDescription = null, // Decorative background
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .align(Alignment.TopCenter),
             contentScale = ContentScale.Crop,
-            alpha = 0.9f, // Slight transparency for subtle effect
+            alpha = 0.9f,
         )
+        */
 
         // Content provided by the caller
         content()
