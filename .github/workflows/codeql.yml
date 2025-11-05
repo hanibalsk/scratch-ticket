@@ -41,14 +41,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build project for CodeQL
-        run: ./gradlew clean build -x test
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
