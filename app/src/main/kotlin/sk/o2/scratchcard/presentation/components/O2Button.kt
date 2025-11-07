@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -110,6 +113,40 @@ fun O2SecondaryButton(
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,
+        )
+    }
+}
+
+/**
+ * O2 Back Button - Circular back arrow button.
+ *
+ * Visual Specs:
+ * - Icon: Back arrow in a filled circle
+ * - Size: 40dp
+ * - Color: Adapts to theme (surface variant)
+ * - Position: Typically top-left of content areas
+ *
+ * @param onClick Click callback for navigation back
+ * @param modifier Optional modifier
+ */
+@Composable
+fun O2BackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FilledIconButton(
+        onClick = onClick,
+        modifier = modifier.size(40.dp),
+        colors =
+            IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Back",
+            modifier = Modifier.size(24.dp),
         )
     }
 }

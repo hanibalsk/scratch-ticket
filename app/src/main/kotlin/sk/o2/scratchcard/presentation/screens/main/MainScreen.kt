@@ -8,11 +8,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
+import sk.o2.scratchcard.presentation.components.O2BrandedBackground
+import sk.o2.scratchcard.presentation.components.O2ContentCard
 import sk.o2.scratchcard.presentation.components.O2PrimaryButton
 import sk.o2.scratchcard.presentation.components.O2StateBadge
 import sk.o2.scratchcard.presentation.theme.O2Spacing
@@ -74,43 +77,48 @@ private fun MainScreenContent(
     onNavigateToActivation: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(O2Spacing.md),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        // App title
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+    O2BrandedBackground(modifier = modifier) {
+        // Center the content card
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            O2ContentCard {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(O2Spacing.md),
+                ) {
+                    // App title
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
 
-        Spacer(modifier = Modifier.height(O2Spacing.lg))
+                    Spacer(modifier = Modifier.height(O2Spacing.sm))
 
-        // State badge - shows current card state
-        O2StateBadge(state = uiState.cardState)
+                    // State badge - shows current card state
+                    O2StateBadge(state = uiState.cardState)
 
-        Spacer(modifier = Modifier.height(O2Spacing.xl))
+                    Spacer(modifier = Modifier.height(O2Spacing.md))
 
-        // Go to Scratch Screen button (always enabled)
-        O2PrimaryButton(
-            text = stringResource(R.string.btn_go_to_scratch),
-            onClick = onNavigateToScratch,
-            enabled = true,
-        )
+                    // Go to Scratch Screen button (always enabled)
+                    O2PrimaryButton(
+                        text = stringResource(R.string.btn_go_to_scratch),
+                        onClick = onNavigateToScratch,
+                        enabled = true,
+                    )
 
-        Spacer(modifier = Modifier.height(O2Spacing.md))
-
-        // Go to Activation Screen button (enabled only when Scratched or Activated)
-        O2PrimaryButton(
-            text = stringResource(R.string.btn_go_to_activation),
-            onClick = onNavigateToActivation,
-            enabled = uiState.isActivationEnabled,
-        )
+                    // Go to Activation Screen button (enabled only when Scratched or Activated)
+                    O2PrimaryButton(
+                        text = stringResource(R.string.btn_go_to_activation),
+                        onClick = onNavigateToActivation,
+                        enabled = uiState.isActivationEnabled,
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -119,6 +127,7 @@ private fun MainScreenContent(
 // ═══════════════════════════════════════════════════════════
 
 @Preview(name = "Main Screen - Unscratched", showBackground = true)
+@Preview(name = "Main Screen - Unscratched (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenUnscratchedPreview() {
     O2Theme {
@@ -135,6 +144,7 @@ fun MainScreenUnscratchedPreview() {
 }
 
 @Preview(name = "Main Screen - Scratched", showBackground = true)
+@Preview(name = "Main Screen - Scratched (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenScratchedPreview() {
     O2Theme {
@@ -151,6 +161,7 @@ fun MainScreenScratchedPreview() {
 }
 
 @Preview(name = "Main Screen - Activated", showBackground = true)
+@Preview(name = "Main Screen - Activated (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenActivatedPreview() {
     O2Theme {

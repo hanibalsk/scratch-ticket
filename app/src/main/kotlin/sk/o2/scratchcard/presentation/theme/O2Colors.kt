@@ -35,6 +35,18 @@ object O2Colors {
      */
     val Navy = Color(0xFF000068)
 
+    /**
+     * Gradient Dark Blue - Top color of O2 branded gradient.
+     * Use for branded backgrounds, hero sections.
+     */
+    val GradientDarkBlue = Color(0xFF002E72)
+
+    /**
+     * Gradient Light Blue - Bottom color of O2 branded gradient.
+     * Use for branded backgrounds, hero sections.
+     */
+    val GradientLightBlue = Color(0xFF0072CE)
+
     // ═══════════════════════════════════════════════════════════
     // Tints
     // ═══════════════════════════════════════════════════════════
