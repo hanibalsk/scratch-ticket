@@ -85,3 +85,6 @@ Thumbs.db
 
 # Emulator helper scripts
 fix-emulator-dns.sh
+
+# MCP configuration (local development)
+.mcp.json

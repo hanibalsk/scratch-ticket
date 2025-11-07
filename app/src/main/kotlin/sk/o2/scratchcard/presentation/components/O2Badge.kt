@@ -1,6 +1,7 @@
 package sk.o2.scratchcard.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -87,16 +88,23 @@ fun O2Chip(
     text: String,
     modifier: Modifier = Modifier,
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
+
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
         color =
-            if (MaterialTheme.colorScheme.surface == O2Colors.White) {
-                O2Colors.Sky05 // Light mode
-            } else {
+            if (isDarkTheme) {
                 O2Colors.BlueDeep.copy(alpha = 0.2f) // Dark mode
+            } else {
+                O2Colors.Sky05 // Light mode
             },
-        contentColor = O2Colors.BlueDeep,
+        contentColor =
+            if (isDarkTheme) {
+                MaterialTheme.colorScheme.primary // Brighter blue for dark mode
+            } else {
+                O2Colors.BlueDeep // Dark blue for light mode
+            },
     ) {
         Text(
             text = text,

@@ -12,12 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
+import sk.o2.scratchcard.presentation.components.O2BackButton
 import sk.o2.scratchcard.presentation.components.O2BrandedBackground
 import sk.o2.scratchcard.presentation.components.O2Card
 import sk.o2.scratchcard.presentation.components.O2ContentCard
@@ -50,26 +52,61 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
 @Composable
 fun ActivationScreen(
     onNavigateBack: () -> Unit,
-    viewModel: ActivationViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
+    viewModel: ActivationViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cardState by viewModel.cardState.collectAsStateWithLifecycle()
 
+    ActivationScreenContent(
+        uiState = uiState,
+        cardState = cardState,
+        onActivateCard = { code -> viewModel.activateCard(code) },
+        onRetryActivation = { code -> viewModel.retryActivation(code) },
+        onClearError = { viewModel.clearError() },
+        onNavigateBack = onNavigateBack,
+        modifier = modifier,
+    )
+}
+
+/**
+ * Activation Screen content composable (stateless).
+ *
+ * Separated from ActivationScreen for easier testing and preview.
+ * Contains only UI logic with no ViewModel dependency.
+ *
+ * @param uiState Current UI state (Idle/Loading/Success/Error)
+ * @param cardState Current scratch card state
+ * @param onActivateCard Callback to activate card with code
+ * @param onRetryActivation Callback to retry activation with code
+ * @param onClearError Callback to clear error state
+ * @param onNavigateBack Callback to return to previous screen
+ * @param modifier Optional modifier
+ */
+@Composable
+private fun ActivationScreenContent(
+    uiState: ActivationUiState,
+    cardState: ScratchCardState,
+    onActivateCard: (String) -> Unit,
+    onRetryActivation: (String) -> Unit,
+    onClearError: () -> Unit,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     // Show error modal if in error state (Story 1.7)
     if (uiState is ActivationUiState.Error) {
-        val errorType = (uiState as ActivationUiState.Error).errorType
+        val errorType = uiState.errorType
 
         O2ErrorDialog(
             title = stringResource(errorType.titleRes),
             message = stringResource(errorType.messageRes),
             onRetry =
                 if (cardState is ScratchCardState.Scratched) {
-                    { viewModel.retryActivation((cardState as ScratchCardState.Scratched).code) }
+                    { onRetryActivation(cardState.code) }
                 } else {
                     null
                 },
-            onDismiss = { viewModel.clearError() },
+            onDismiss = onClearError,
         )
     }
 
@@ -78,12 +115,28 @@ fun ActivationScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            O2ContentCard {
+            O2ContentCard(
+                modifier =
+                    Modifier
+                        .padding(bottom = O2Spacing.xxl), // Space from bottom bar
+            ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(O2Spacing.md),
                 ) {
+                    // Back button at top-left
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = O2Spacing.sm),
+                    ) {
+                        O2BackButton(
+                            onClick = onNavigateBack,
+                            modifier = Modifier.align(Alignment.TopStart),
+                        )
+                    }
                     when (uiState) {
                         is ActivationUiState.Success -> {
                             // Success feedback (Story 1.6)
@@ -198,7 +251,7 @@ fun ActivationScreen(
 
                                     O2PrimaryButton(
                                         text = stringResource(R.string.btn_activate),
-                                        onClick = { viewModel.activateCard(state.code) },
+                                        onClick = { onActivateCard(state.code) },
                                         modifier = Modifier.fillMaxWidth(),
                                     )
                                 }
@@ -253,10 +306,74 @@ fun ActivationScreen(
     }
 }
 
-@Preview(showBackground = true)
+// ═══════════════════════════════════════════════════════════
+// Previews
+// ═══════════════════════════════════════════════════════════
+
+@Preview(name = "Activation Screen - Idle", showBackground = true)
+@Preview(name = "Activation Screen - Idle (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ActivationScreenIdlePreview() {
     O2Theme {
-        ActivationScreen(onNavigateBack = {})
+        ActivationScreenContent(
+            uiState = ActivationUiState.Idle,
+            cardState = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"),
+            onActivateCard = {},
+            onRetryActivation = {},
+            onClearError = {},
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(name = "Activation Screen - Loading", showBackground = true)
+@Preview(name = "Activation Screen - Loading (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ActivationScreenLoadingPreview() {
+    O2Theme {
+        ActivationScreenContent(
+            uiState = ActivationUiState.Loading,
+            cardState = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"),
+            onActivateCard = {},
+            onRetryActivation = {},
+            onClearError = {},
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(name = "Activation Screen - Success", showBackground = true)
+@Preview(name = "Activation Screen - Success (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ActivationScreenSuccessPreview() {
+    O2Theme {
+        ActivationScreenContent(
+            uiState = ActivationUiState.Success,
+            cardState = ScratchCardState.Activated("550e8400-e29b-41d4-a716-446655440000"),
+            onActivateCard = {},
+            onRetryActivation = {},
+            onClearError = {},
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(name = "Activation Screen - Already Activated", showBackground = true)
+@Preview(
+    name = "Activation Screen - Already Activated (Dark)",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Composable
+fun ActivationScreenAlreadyActivatedPreview() {
+    O2Theme {
+        ActivationScreenContent(
+            uiState = ActivationUiState.Idle,
+            cardState = ScratchCardState.Activated("550e8400-e29b-41d4-a716-446655440000"),
+            onActivateCard = {},
+            onRetryActivation = {},
+            onClearError = {},
+            onNavigateBack = {},
+        )
     }
 }

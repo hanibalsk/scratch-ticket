@@ -14,11 +14,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import sk.o2.scratchcard.R
 import sk.o2.scratchcard.domain.model.ScratchCardState
+import sk.o2.scratchcard.presentation.components.O2BackButton
 import sk.o2.scratchcard.presentation.components.O2BrandedBackground
 import sk.o2.scratchcard.presentation.components.O2Card
 import sk.o2.scratchcard.presentation.components.O2ContentCard
@@ -60,17 +62,68 @@ fun ScratchScreen(
         onNavigateBack()
     }
 
+    ScratchScreenContent(
+        cardState = cardState,
+        isScratching = isScratching,
+        scratchProgress = scratchProgress,
+        errorMessage = errorMessage,
+        onStartScratch = { viewModel.startScratch() },
+        onNavigateBack = onNavigateBack,
+        modifier = modifier,
+    )
+}
+
+/**
+ * Scratch Screen content composable (stateless).
+ *
+ * Separated from ScratchScreen for easier testing and preview.
+ * Contains only UI logic with no ViewModel dependency.
+ *
+ * @param cardState Current scratch card state
+ * @param isScratching Whether scratch operation is in progress
+ * @param scratchProgress Progress value from 0.0 to 1.0
+ * @param errorMessage Error message to display, if any
+ * @param onStartScratch Callback to start scratch operation
+ * @param onNavigateBack Callback to return to previous screen
+ * @param modifier Optional modifier
+ */
+@Composable
+private fun ScratchScreenContent(
+    cardState: ScratchCardState,
+    isScratching: Boolean,
+    scratchProgress: Float,
+    errorMessage: String?,
+    onStartScratch: () -> Unit,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     O2BrandedBackground(modifier = modifier) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            O2ContentCard {
+            O2ContentCard(
+                modifier =
+                    Modifier
+                        .padding(bottom = O2Spacing.xxl), // Space from bottom bar
+            ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(O2Spacing.md),
                 ) {
+                    // Back button at top-left
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = O2Spacing.sm),
+                    ) {
+                        O2BackButton(
+                            onClick = onNavigateBack,
+                            modifier = Modifier.align(Alignment.TopStart),
+                        )
+                    }
                     when {
                         // Show loading with progress during scratch
                         isScratching -> {
@@ -154,7 +207,7 @@ fun ScratchScreen(
 
                             O2PrimaryButton(
                                 text = stringResource(R.string.btn_scratch_card),
-                                onClick = { viewModel.startScratch() },
+                                onClick = onStartScratch,
                                 modifier = Modifier.fillMaxWidth(),
                             )
 
@@ -175,10 +228,54 @@ fun ScratchScreen(
     }
 }
 
-@Preview(showBackground = true)
+// ═══════════════════════════════════════════════════════════
+// Previews
+// ═══════════════════════════════════════════════════════════
+
+@Preview(name = "Scratch Screen - Initial", showBackground = true)
+@Preview(name = "Scratch Screen - Initial (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ScratchScreenPreview() {
+fun ScratchScreenInitialPreview() {
     O2Theme {
-        ScratchScreen(onNavigateBack = {})
+        ScratchScreenContent(
+            cardState = ScratchCardState.Unscratched,
+            isScratching = false,
+            scratchProgress = 0f,
+            errorMessage = null,
+            onStartScratch = {},
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(name = "Scratch Screen - Scratching", showBackground = true)
+@Preview(name = "Scratch Screen - Scratching (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ScratchScreenScratchingPreview() {
+    O2Theme {
+        ScratchScreenContent(
+            cardState = ScratchCardState.Unscratched,
+            isScratching = true,
+            scratchProgress = 0.65f,
+            errorMessage = null,
+            onStartScratch = {},
+            onNavigateBack = {},
+        )
+    }
+}
+
+@Preview(name = "Scratch Screen - Revealed", showBackground = true)
+@Preview(name = "Scratch Screen - Revealed (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ScratchScreenRevealedPreview() {
+    O2Theme {
+        ScratchScreenContent(
+            cardState = ScratchCardState.Scratched("550e8400-e29b-41d4-a716-446655440000"),
+            isScratching = false,
+            scratchProgress = 1f,
+            errorMessage = null,
+            onStartScratch = {},
+            onNavigateBack = {},
+        )
     }
 }

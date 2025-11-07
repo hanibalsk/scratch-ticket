@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -126,6 +127,7 @@ private fun MainScreenContent(
 // ═══════════════════════════════════════════════════════════
 
 @Preview(name = "Main Screen - Unscratched", showBackground = true)
+@Preview(name = "Main Screen - Unscratched (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenUnscratchedPreview() {
     O2Theme {
@@ -142,6 +144,7 @@ fun MainScreenUnscratchedPreview() {
 }
 
 @Preview(name = "Main Screen - Scratched", showBackground = true)
+@Preview(name = "Main Screen - Scratched (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenScratchedPreview() {
     O2Theme {
@@ -158,6 +161,7 @@ fun MainScreenScratchedPreview() {
 }
 
 @Preview(name = "Main Screen - Activated", showBackground = true)
+@Preview(name = "Main Screen - Activated (Dark)", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenActivatedPreview() {
     O2Theme {

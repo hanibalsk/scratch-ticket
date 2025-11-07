@@ -1,12 +1,17 @@
 package sk.o2.scratchcard.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -15,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import sk.o2.scratchcard.R
 import sk.o2.scratchcard.presentation.theme.O2Colors
 import sk.o2.scratchcard.presentation.theme.O2Spacing
 import sk.o2.scratchcard.presentation.theme.O2Theme
@@ -26,9 +33,9 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
  * O2 Branded Background with Logo and Gradient.
  *
  * Creates a branded background following O2 visual identity:
- * - Top half: O2 logo on blue gradient (using drawable resource)
- * - Bottom half: Gradient continuation to bottom of screen
- * - Content: Displayed in white elevated card overlaying the background
+ * - O2 blue gradient (#002E72 to #0072CE) - consistent in all themes
+ * - O2 logo centered in gradient area
+ * - Content card positioned in bottom 2/3 of screen (theme-aware)
  *
  * Design Pattern:
  * - Branded splash/landing pages
@@ -36,63 +43,76 @@ import sk.o2.scratchcard.presentation.theme.O2Theme
  * - Marketing/onboarding flows
  *
  * Visual Hierarchy:
- * - Background: O2 blue gradient (BlueDeep -> BluePrimary -> lighter)
- * - Content: White elevated card with rounded corners
- * - Contrast: High contrast for accessibility
+ * - Gradient: O2 branded blue gradient (same in light/dark mode)
+ * - Logo: Centered in gradient area
+ * - Content: Theme-aware elevated card in bottom 2/3
  *
  * @param modifier Optional modifier for custom layout behavior
- * @param content Composable content to display in the white card overlay
+ * @param content Composable content to display in the themed card overlay
  */
 @Composable
 fun O2BrandedBackground(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    // O2 blue gradient stays the same in both light and dark mode
+    val gradientTopColor = O2Colors.GradientDarkBlue
+    val gradientBottomColor = O2Colors.GradientLightBlue
+
     Box(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(
-                    brush =
-                        Brush.verticalGradient(
-                            colors =
-                                listOf(
-                                    O2Colors.BlueDeep, // Dark blue at top
-                                    O2Colors.BluePrimary, // O2 primary blue
-                                    Color(0xFF0070FF), // Lighter blue at bottom
-                                ),
-                        ),
-                ),
+        modifier = modifier.fillMaxSize(),
     ) {
-        // TODO: Add O2 logo image here when available
-        // Place your O2 logo image as app/src/main/res/drawable/bg_o2_logo.webp (or .png)
-        // Then uncomment the Image composable below:
-        /*
-        Image(
-            painter = painterResource(id = R.drawable.bg_o2_logo),
-            contentDescription = null, // Decorative background
+        // Top area with gradient (above content card)
+        Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .align(Alignment.TopCenter),
-            contentScale = ContentScale.Crop,
-            alpha = 0.9f,
-        )
-        */
+                    .fillMaxHeight(0.33f) // Top 1/3 of screen
+                    .background(
+                        brush =
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        gradientTopColor,
+                                        gradientBottomColor,
+                                    ),
+                            ),
+                    ).align(Alignment.TopCenter),
+            contentAlignment = Alignment.Center,
+        ) {
+            // O2 logo centered in the gradient area
+            Image(
+                painter = painterResource(id = R.drawable.o2_logo),
+                contentDescription = null, // Decorative background
+                modifier = Modifier.fillMaxWidth(0.4f),
+                contentScale = ContentScale.Fit,
+            )
+        }
 
-        // Content provided by the caller
-        content()
+        // Content positioned in bottom 2/3 of screen
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.67f) // Bottom 2/3
+                    .background(gradientBottomColor) // Same as bottom gradient color
+                    .align(Alignment.BottomCenter)
+                    .windowInsetsPadding(WindowInsets.systemBars), // Respect system bars
+        ) {
+            content()
+        }
     }
 }
 
 /**
- * O2 Content Card - White elevated card for content overlay.
+ * O2 Content Card - Theme-aware elevated card for content overlay.
  *
  * Standard container for content displayed over O2BrandedBackground.
- * Provides consistent styling, elevation, and spacing.
+ * Provides consistent styling, elevation, and spacing with automatic theme adaptation.
  *
  * Features:
- * - White background with elevation shadow
+ * - Theme-aware background (white in light mode, dark surface in dark mode)
+ * - Elevation shadow
  * - Rounded corners (16dp)
  * - Padding for comfortable content spacing
  * - Full-width with side margins
@@ -113,7 +133,7 @@ fun O2ContentCard(
         shape = RoundedCornerShape(16.dp),
         colors =
             CardDefaults.cardColors(
-                containerColor = O2Colors.White,
+                containerColor = MaterialTheme.colorScheme.surface,
             ),
         elevation =
             CardDefaults.cardElevation(
