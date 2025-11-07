@@ -16,8 +16,28 @@ This app implements a scratch card feature with three states (Unscratched, Scrat
 - **API Integration**: Validates scratch codes with O2's version API endpoint
 - **State Management**: Persistent state across navigation using StateFlow
 - **O2 Design System**: Complete implementation of O2 brand identity
+- **Dark Mode Support**: Full dark mode with theme-aware components
 - **Clean Architecture**: Three-layer architecture (Domain/Data/Presentation)
 - **Modern Stack**: Kotlin 2.1.0, Jetpack Compose, Hilt, Ktor Client
+
+## Screenshots
+
+All screens support both light and dark modes with O2 branded design.
+
+| Screen | Light Mode | Dark Mode |
+|--------|------------|-----------|
+| **Main Screen**<br/>Entry point showing card state | ![Main Light](screenshots/01_main_light.png) | ![Main Dark](screenshots/01_main_dark.png) |
+| **Scratch Screen - Initial**<br/>Before scratching | ![Scratch Initial Light](screenshots/02_scratch_initial_light.png) | ![Scratch Initial Dark](screenshots/02_scratch_initial_dark.png) |
+| **Scratch Screen - Revealed**<br/>Code revealed after scratching | ![Scratch Revealed Light](screenshots/03_scratch_revealed_light.png) | ![Scratch Revealed Dark](screenshots/03_scratch_revealed_dark.png) |
+| **Activation Screen - Before**<br/>Ready to activate with code | ![Activation Before Light](screenshots/04_activation_before_light.png) | ![Activation Before Dark](screenshots/04_activation_before_dark.png) |
+| **Activation Screen - Success**<br/>Successfully activated | ![Activation Success Light](screenshots/05_activation_success_light.png) | ![Activation Success Dark](screenshots/05_activation_success_dark.png) |
+
+### Design Highlights
+
+- **O2 Branded Background**: Blue gradient (#002E72 → #0072CE) consistent across all themes
+- **Theme-Aware Cards**: White cards in light mode, dark surface cards in dark mode
+- **Back Navigation**: Circular back button on all sub-screens
+- **Accessibility**: High contrast text and proper spacing in both themes
 
 ## Technology Stack
 
